@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/raw/
+work/*
+!work/web/
+*.db-wal
+*.db-shm

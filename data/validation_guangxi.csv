@@ -1,0 +1,22 @@
+﻿month,category,tariff_type,voltage,check,detail
+2025-11,工商业用电,单一制,不满1千伏,components_sum,sum=0.750682 energy=0.759092 diff=-0.00841
+2025-11,工商业用电,单一制,1~10千伏,components_sum,sum=0.737982 energy=0.746392 diff=-0.00841
+2025-11,工商业用电,单一制,35千伏,components_sum,sum=0.718182 energy=0.726592 diff=-0.00841
+2025-11,工商业用电,两部制,1~10千伏,components_sum,sum=0.629382 energy=0.637792 diff=-0.00841
+2025-11,工商业用电,两部制,35千伏,components_sum,sum=0.587182 energy=0.595592 diff=-0.00841
+2025-11,工商业用电,两部制,110千伏,components_sum,sum=0.559482 energy=0.567892 diff=-0.00841
+2025-11,工商业用电,两部制,220千伏,components_sum,sum=0.510582 energy=0.518992 diff=-0.00841
+2025-12,工商业用电,单一制,不满1千伏,components_sum,sum=0.753254 energy=0.758864 diff=-0.00561
+2025-12,工商业用电,单一制,1~10千伏,components_sum,sum=0.740554 energy=0.746164 diff=-0.00561
+2025-12,工商业用电,单一制,35千伏,components_sum,sum=0.720754 energy=0.726364 diff=-0.00561
+2025-12,工商业用电,两部制,1~10千伏,components_sum,sum=0.631954 energy=0.637564 diff=-0.00561
+2025-12,工商业用电,两部制,35千伏,components_sum,sum=0.589754 energy=0.595364 diff=-0.00561
+2025-12,工商业用电,两部制,110千伏,components_sum,sum=0.562054 energy=0.567664 diff=-0.00561
+2025-12,工商业用电,两部制,220千伏,components_sum,sum=0.513154 energy=0.518764 diff=-0.00561
+2026-02,工商业用电,单一制,不满1千伏,components_sum,sum=0.842554 energy=0.844055 diff=-0.001501
+2026-02,工商业用电,单一制,1~10千伏,components_sum,sum=0.829854 energy=0.831355 diff=-0.001501
+2026-02,工商业用电,单一制,35千伏,components_sum,sum=0.810054 energy=0.811555 diff=-0.001501
+2026-02,工商业用电,两部制,1~10千伏,components_sum,sum=0.721254 energy=0.722755 diff=-0.001501
+2026-02,工商业用电,两部制,35千伏,components_sum,sum=0.679054 energy=0.680555 diff=-0.001501
+2026-02,工商业用电,两部制,110千伏,components_sum,sum=0.651354 energy=0.652855 diff=-0.001501
+2026-02,工商业用电,两部制,220千伏,components_sum,sum=0.602454 energy=0.603955 diff=-0.001501

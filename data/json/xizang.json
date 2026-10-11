@@ -1,0 +1,118 @@
+{
+ "region": {
+  "code": "xizang",
+  "name": "西藏",
+  "grid": "sgcc",
+  "province": "西藏自治区"
+ },
+ "months": [],
+ "tariffs": [],
+ "tou_rules": [
+  {
+   "id": 76001,
+   "region_code": "xizang",
+   "effective_from": "2023-12-01",
+   "effective_to": null,
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "day_type": "normal",
+   "segments": [
+    [
+     "00:00",
+     "03:00",
+     "flat"
+    ],
+    [
+     "03:00",
+     "06:00",
+     "deep_valley"
+    ],
+    [
+     "06:00",
+     "11:00",
+     "flat"
+    ],
+    [
+     "11:00",
+     "17:00",
+     "valley"
+    ],
+    [
+     "17:00",
+     "24:00",
+     "flat"
+    ]
+   ],
+   "doc_id": "33d9f7f15f6053406b73cc3f5e316febc98838a8"
+  },
+  {
+   "id": 76002,
+   "region_code": "xizang",
+   "effective_from": "2023-12-01",
+   "effective_to": null,
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    11,
+    12
+   ],
+   "day_type": "normal",
+   "segments": [
+    [
+     "00:00",
+     "09:00",
+     "flat"
+    ],
+    [
+     "09:00",
+     "13:00",
+     "peak"
+    ],
+    [
+     "13:00",
+     "19:00",
+     "flat"
+    ],
+    [
+     "19:00",
+     "22:00",
+     "sharp"
+    ],
+    [
+     "22:00",
+     "24:00",
+     "peak"
+    ]
+   ],
+   "doc_id": "33d9f7f15f6053406b73cc3f5e316febc98838a8"
+  }
+ ],
+ "sources": [
+  {
+   "id": "33d9f7f15f6053406b73cc3f5e316febc98838a8",
+   "kind": "tou_policy",
+   "title": "西藏自治区人民政府办公厅关于进一步优化调整全区上网电价和销售电价引导降低社会用电成本的通知",
+   "doc_no": "藏政办发〔2023〕28号",
+   "publish_date": "2023-11-14",
+   "effective_from": "2023-12-01",
+   "effective_to": null,
+   "source_url": "https://www.95598.cn/omg-static/99308100976112223958902124993974",
+   "file_path": null,
+   "sha256": null
+  }
+ ],
+ "notes": [
+  "No monthly 代理购电工商业用户电价 is published for 西藏 (95598.cn P2019 西藏 listing: only 藏政办发〔2023〕28号 and the 2026-09-03 TDP notice 藏发改价格〔2026〕254号, which announces market trading from 2026-10-01).  工商业 users pay the 目录销售电价 of 藏政办发〔2023〕28号 (effective 2023-12-01); tariff_month is therefore empty.",
+  "TOU (大工业 分季节峰谷分时, all 大工业 except 电气化铁路牵引): 丰水期 5-10月 平 0:00-3:00、6:00-11:00、17:00-24:00, 低谷 11:00-17:00, 深谷 3:00-6:00; 枯水期 1-4、11-12月 平 0:00-9:00、13:00-19:00, 高峰 9:00-13:00、22:00-24:00, 尖峰 19:00-22:00. 高峰 = 平 ×1.5, 低谷 = 平 ×0.5, 尖峰 = 高峰 ×1.2, 深谷 = 低谷 ×0.8.",
+  "Catalogue prices, 28号 附件3 (元/kWh). 大工业 (10千伏 / 35千伏 / 110千伏及以上): 平段 0.67 / 0.66 / 0.65; 丰水期 低谷 0.335 / 0.33 / 0.325, 深谷 0.268 / 0.264 / 0.26; 枯水期 高峰 1.005 / 0.99 / 0.975, 尖峰 1.206 / 1.188 / 1.17 (限制类、淘汰类 +0.06 on 平). 一般工商业 分季节 (220/380伏 / 10 / 35 / 110千伏及以上): 丰水期 0.70 / 0.69 / 0.68 / 0.67, 枯水期 0.76 / 0.75 / 0.74 / 0.73 (非工业 users excluded from 分季节). 基本电价 10元/千伏安·月 for 专变 大工业 and 一般工商业. Not stored as tariff rows (目录电价, not 代理购电)."
+ ],
+ "generated_at": "2026-10-11T05:43:43+00:00"
+}
