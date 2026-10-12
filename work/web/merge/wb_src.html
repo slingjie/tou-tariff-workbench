@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>分时电价工作台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      :root {
+        --x-sharp: light-dark(#a3161c, #f0646a);
+        --x-peak: var(--fill-system-orange);
+        --x-flat: light-dark(#a1a1a6, #76767b);
+        --x-valley: var(--fill-system-green);
+        --x-deep_valley: light-dark(#2563c9, #5c9cff);
+      }
+      .x-bar {
+        position: sticky; top: 0; z-index: 20;
+        display: flex; flex-wrap: wrap; align-items: end; gap: 10px 14px;
+        margin-inline: calc(var(--gutter) * -1); padding: 12px var(--gutter);
+        background: var(--mat-agent); -webkit-backdrop-filter: var(--hark-blur); backdrop-filter: var(--hark-blur);
+        border-bottom: 1px solid var(--stroke-secondary);
+      }
+      .x-brand { display: grid; gap: 2px; margin-right: auto; min-width: 150px; }
+      .x-brand h1 { font: var(--type-heading); }
+      .x-clock { font: var(--type-caption); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+      .x-sel { display: grid; gap: 4px; font: var(--type-caption); color: var(--text-secondary); min-width: 0; }
+      .x-sel select, .x-in input {
+        min-height: 36px; max-width: 100%; padding: 6px 10px; border-radius: var(--r-s);
+        border: 1px solid var(--stroke-primary); background: var(--fill-primary-on); color: var(--text-primary); font: var(--type-small);
+      }
+      .x-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+      .x-card { grid-column: span 12; min-width: 0; padding: 16px 18px; border: 1px solid var(--stroke-secondary); border-radius: var(--r-m); background: var(--fill-primary-on); position: relative; }
+      .x-s4 { grid-column: span 4; } .x-s5 { grid-column: span 5; } .x-s6 { grid-column: span 6; } .x-s7 { grid-column: span 7; } .x-s8 { grid-column: span 8; }
+      .x-card > h2 { font: var(--type-body-strong); margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+      .x-card > h2 small { font: var(--type-caption); color: var(--text-secondary); }
+      .x-notice { padding: 12px 14px; border-radius: var(--r-s); background: var(--fill-tertiary); font: var(--type-small); }
+      .x-notice:empty { display: none; }
+      .x-now { display: grid; gap: 8px; }
+      .x-now__p { display: flex; align-items: center; gap: 10px; font: var(--type-title); }
+      .x-now__fig { font: var(--type-figure); font-variant-numeric: tabular-nums; }
+      .x-now__fig small { font: var(--type-caption); color: var(--text-secondary); }
+      .x-cd { font: var(--weight-regular) 15px/1.3 "Geist Mono", ui-monospace, monospace; }
+      .x-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--c); flex: none; vertical-align: -1px; }
+      .x-now .x-sw { width: 16px; height: 16px; border-radius: 4px; }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+      .x-kpi { padding: 12px 14px; border-radius: var(--r-s); background: var(--fill-tertiary); display: grid; gap: 4px; align-content: start; }
+      .x-kpi span { font: var(--type-caption); color: var(--text-secondary); }
+      .x-kpi b { font: var(--weight-regular) 22px/1.2 var(--sans); font-variant-numeric: tabular-nums; }
+      .x-kpi b small { font: var(--type-caption); color: var(--text-secondary); }
+      .x-hrs { display: flex; flex-wrap: wrap; gap: 4px 10px; font: var(--type-small); }
+      .x-svg { position: relative; }
+      .x-svg svg { display: block; width: 100%; touch-action: pan-y; }
+      .x-svg text { font: 12px var(--sans); fill: var(--text-secondary); }
+      .x-tip { position: absolute; z-index: 5; pointer-events: none; padding: 6px 10px; border-radius: 8px; background: var(--fill-primary); color: var(--text-primary-on); font: var(--type-caption); white-space: nowrap; display: none; font-variant-numeric: tabular-nums; }
+      .x-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font: var(--type-caption); color: var(--text-secondary); margin-top: 8px; }
+      .x-legend span { display: inline-flex; align-items: center; gap: 6px; }
+      tbody tr.x-click { cursor: pointer; }
+      tbody tr.x-click:hover > * { background: var(--hover-wash); }
+      .x-sort { all: unset; cursor: pointer; font: var(--type-tag); color: var(--text-secondary); }
+      .x-sort[aria-sort] { color: var(--text-primary); }
+      .x-cal { display: grid; grid-template-columns: 58px repeat(48, minmax(0, 1fr)); gap: 2px 0; font: var(--type-caption); }
+      .x-cal > span { height: 18px; }
+      .x-cal .x-h { grid-column: span 6; color: var(--text-secondary); height: auto; }
+      .x-cal .x-ml { color: var(--text-secondary); height: auto; align-self: center; font-variant-numeric: tabular-nums; }
+      .x-cal .x-ml.is-sel { color: var(--text-primary); font-weight: var(--weight-bold); }
+      .x-cal .x-c { background: var(--c, var(--fill-tertiary)); }
+      .x-cal .x-c:nth-child(2n) { box-shadow: inset -1px 0 var(--fill-primary-on); }
+      .x-cov { display: grid; grid-template-columns: minmax(84px, 9em) repeat(12, minmax(0, 1fr)); gap: 2px; font: var(--type-caption); }
+      .x-cov button { all: unset; cursor: pointer; padding: 2px 4px; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .x-cov button:hover, .x-cov button.is-sel { background: var(--fill-tertiary); color: var(--text-primary); }
+      .x-cov button:focus-visible { outline: 2px solid var(--fill-primary); }
+      .x-cov i { display: block; border-radius: 3px; background: var(--fill-tertiary); min-height: 14px; }
+      .x-cov i.on { background: var(--fill-primary); }
+      .x-cov .x-h { color: var(--text-secondary); text-align: center; }
+      .x-covnotes { margin-top: 14px; display: grid; gap: 8px; font: var(--type-small); }
+      .x-covnotes ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--text-secondary); overflow-wrap: anywhere; }
+      .x-ins { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 14px; }
+      .x-in { display: grid; gap: 4px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-in input, .x-in select { width: 100%; }
+      @media (max-width: 900px) { .x-s4, .x-s5, .x-s6, .x-s7, .x-s8 { grid-column: span 12; } }
+      @media (max-width: 599px) {
+        .x-sel { flex: 1 1 40%; }
+        .x-sel select, .x-in input { min-height: var(--tap); width: 100%; }
+        .x-brand { flex-basis: 100%; }
+        .x-cal { grid-template-columns: 44px repeat(48, minmax(0, 1fr)); }
+        .x-cov button { min-height: 28px; display: flex; align-items: center; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <header class="x-bar">
+        <div class="x-brand"><h1>分时电价工作台</h1><span class="x-clock" id="clock">北京时间 --:--:--</span></div>
+        <label class="x-sel">区域<select id="sR"></select></label>
+        <label class="x-sel">月份<select id="sM"></select></label>
+        <label class="x-sel">分类·计价<select id="sC"></select></label>
+        <label class="x-sel">电压等级<select id="sV"></select></label>
+      </header>
+      <main class="main">
+        <p class="x-notice" id="notice"></p>
+        <div class="x-grid">
+          <section class="x-card x-s4" aria-live="polite"><h2>当前时段 <small id="nowSub"></small></h2><div id="now"></div></section>
+          <section class="x-card x-s8"><h2>关键指标 <small>元/kWh，需量 元/kW·月，容量 元/kVA·月</small></h2><div class="x-kpis" id="kpis"></div></section>
+          <section class="x-card"><h2>24H 电价走势 <small id="c24sub"></small></h2><div class="x-svg" id="c24"></div><div class="x-legend" id="leg24"></div></section>
+          <section class="x-card x-s7"><h2>电价构成 <small>元/kWh，6 位小数</small></h2><div id="comp"></div></section>
+          <section class="x-card x-s5"><h2>储能套利测算</h2>
+            <div class="x-ins">
+              <label class="x-in">容量 kWh<input id="eCap" type="number" min="0" value="1000" inputmode="decimal" /></label>
+              <label class="x-in">效率 %<input id="eEff" type="number" min="1" max="100" value="85" inputmode="decimal" /></label>
+              <label class="x-in">每天循环<select id="eCyc"><option value="1">1 次</option><option value="2">2 次</option></select></label>
+              <label class="x-in">年运行天数<input id="eDays" type="number" min="0" max="366" value="330" inputmode="numeric" /></label>
+            </div>
+            <div id="ess"></div>
+          </section>
+          <section class="x-card"><h2>电压等级对比 <small id="vsub"></small></h2><div class="table-wrap"><table id="vt"></table></div></section>
+          <section class="x-card x-s6"><h2>12 个月走势 <small id="msub"></small></h2><div class="x-svg" id="c12"></div><div class="x-legend" id="leg12"></div></section>
+          <section class="x-card x-s6"><h2>12×24 分时日历 <small>正常工作日规则，点月份切换</small></h2><div class="x-cal" id="cal"></div><div class="x-legend" id="legcal"></div></section>
+          <section class="x-card"><h2>全国价差排行 <small id="rsub"></small></h2><div class="table-wrap"><table id="rt"></table></div><p class="fineprint">每区域取代表行：优先 1-10 千伏、单一制，否则最低电压等级。价差 = 高峰 − 低谷。点行切换区域。</p></section>
+          <section class="x-card"><h2>数据覆盖 <small>40 区域 × 12 个月，深色为已入库，点区域看说明</small></h2><div class="x-cov" id="cov"></div><div class="x-covnotes" id="covn"></div></section>
+        </div>
+      </main>
+      <footer class="foot">
+        <div class="prose">
+          <p class="fineprint">数据来源：各省电网企业代理购电价格公告及发改委分时电价文件（国网 95598、南方电网 95598、省电力公司及政府官网转载），自建管线解析入库，2026-10-11 更新。energydc.cn 仅用于交叉核对。</p>
+          <p class="fineprint">待定口径：江门 2026-08 起沿用珠三角六市表；广西“其他”分摊列未入库；云南系统运行费官方印“-”保持空值。</p>
+        </div>
+        <a class="badge" href="https://hark.com/" target="_blank" rel="noopener"><span class="hark-mark"></span><span>built by hark</span></a>
+      </footer>
+    </div>
+    <script type="application/json" id="data">__DATA__</script>
+    <script src="hark.js"></script>
+    <script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var D = JSON.parse($("data").textContent), F = D.fields, R = D.regions;
+  var WIN = []; for (var i = 0; i < 12; i++) WIN.push(new Date(Date.UTC(2025, 10 + i, 1)).toISOString().slice(0, 7));
+  var P = ["sharp", "peak", "flat", "valley", "deep_valley"];
+  var PN = { sharp: "尖峰", peak: "高峰", flat: "平段", valley: "低谷", deep_valley: "深谷" };
+  var GAP = {
+    heilongjiang: "黑龙江缺 2025-11、2025-12、2026-02~04（官方页面维护）",
+    yunnan: "云南仅 2026-06 起（南网未发布更早可读表格）",
+    gansu: "甘肃缺 2025-11、2025-12",
+    sichuan: "四川缺 2026-09（官方 docx 无法下载）",
+    xizang: "西藏无月度代理购电序列，仅分时规则",
+    guangxi: "广西暂无已确认的现行分时规则"
+  };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var fx = function (v, d) { return v == null || !isFinite(v) ? "—" : (+v).toFixed(d == null ? 4 : d); };
+  var col = function (t) { return t ? "var(--x-" + t + ")" : "var(--fill-tertiary)"; };
+  var sw = function (t) { return '<i class="x-sw" style="--c:' + col(t) + '"></i>'; };
+  var grp = function (g) { return g === "sgcc" ? "国网" : g === "csg" ? "南方电网" : "内蒙古电力"; };
+  var obj = function (a) { var o = {}; F.forEach(function (f, i) { o[f] = a[i]; }); return o; };
+  var rowsOf = function (r, m) { return (R[r].rows || []).filter(function (x) { return x[0] === m; }).map(obj); };
+  var ctOf = function (o) { return o.category + " · " + o.tariff_type; };
+  var uniq = function (a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); };
+  var mlab = function (m) { return m.slice(2, 4) + "-" + m.slice(5); };
+  var hm = function (s) { var h = Math.floor(s / 2); return (h < 10 ? "0" : "") + h + ":" + (s % 2 ? "30" : "00"); };
+
+  function rule(r, m) {
+    if (!m) return null;
+    var mm = +m.slice(5), d = m + "-01";
+    return (R[r].tou || []).filter(function (t) {
+      return t.day_type === "normal" && (t.months || []).indexOf(mm) >= 0 && (!t.effective_from || t.effective_from <= d) && (!t.effective_to || t.effective_to >= d);
+    }).sort(function (a, b) { return (a.effective_from || "") < (b.effective_from || "") ? 1 : -1; })[0] || null;
+  }
+  var toS = function (s) { var p = String(s).split(":"); return Math.round((+p[0] * 60 + +(p[1] || 0)) / 30); };
+  function slots(ru) {
+    var a = []; for (var i = 0; i < 48; i++) a.push(null);
+    if (!ru) return a;
+    (ru.segments || []).forEach(function (sg) {
+      var i = toS(sg[0]), j = toS(sg[1]); if (j <= i) j += 48;
+      for (var k = i; k < j; k++) a[k % 48] = sg[2];
+    });
+    return a;
+  }
+  function priced(row, ts) {
+    return ts.map(function (t) {
+      if (!t || !row) return { t: t, p: null, fb: false };
+      var p = row[t], fb = false;
+      if (p == null && t === "sharp") { p = row.peak; fb = true; }
+      if (p == null && t === "deep_valley") { p = row.valley; fb = true; }
+      return { t: t, p: p == null ? null : p, fb: fb };
+    });
+  }
+
+  var S = { r: R.zhejiang ? "zhejiang" : Object.keys(R)[0], m: null, ct: null, v: null };
+  var C = { row: null, rows: [], pr: [], ts: [], ru: null, ok: false };
+
+  // region select
+  (function () {
+    var gs = {}, order = [];
+    Object.keys(R).forEach(function (k) { var g = grp(R[k].grid); if (!gs[g]) { gs[g] = []; order.push(g); } gs[g].push(k); });
+    $("sR").innerHTML = ["国网", "南方电网", "内蒙古电力"].filter(function (g) { return gs[g]; }).map(function (g) {
+      return '<optgroup label="' + g + '">' + gs[g].map(function (k) { return '<option value="' + k + '">' + esc(R[k].name) + "</option>"; }).join("") + "</optgroup>";
+    }).join("");
+  })();
+  var opts = function (list, cur, empty) {
+    if (!list.length) return '<option value="">' + empty + "</option>";
+    return list.map(function (x) { return '<option value="' + esc(x[0]) + '"' + (x[0] === cur ? " selected" : "") + ">" + esc(x[1]) + "</option>"; }).join("");
+  };
+
+  function sync() {
+    var reg = R[S.r], ms = reg.months || [];
+    if (ms.indexOf(S.m) < 0) S.m = ms[ms.length - 1] || null;
+    var rows = S.m ? rowsOf(S.r, S.m) : [];
+    var cts = uniq(rows.map(ctOf));
+    if (cts.indexOf(S.ct) < 0) S.ct = cts[0] || null;
+    var vr = rows.filter(function (o) { return ctOf(o) === S.ct; }).sort(function (a, b) { return (a.voltage_rank || 0) - (b.voltage_rank || 0); });
+    var vs = uniq(vr.map(function (o) { return o.voltage; }));
+    if (vs.indexOf(S.v) < 0) S.v = vs[0] || null;
+    $("sR").value = S.r;
+    $("sM").innerHTML = opts(ms.slice().reverse().map(function (m) { return [m, m]; }), S.m, "无月度数据");
+    $("sC").innerHTML = opts(cts.map(function (c) { return [c, c]; }), S.ct, "—");
+    $("sV").innerHTML = opts(vs.map(function (v) { return [v, v]; }), S.v, "—");
+    C.rows = vr;
+    C.row = vr.filter(function (o) { return o.voltage === S.v; })[0] || null;
+    C.ru = rule(S.r, S.m);
+    C.ts = slots(C.ru);
+    C.pr = priced(C.row, C.ts);
+    C.ok = !!C.ru && C.ts.some(Boolean);
+    C.np = C.ok && !!C.row && !C.pr.some(function (x) { return x.p != null; });
+    render();
+  }
+  $("sR").onchange = function () { S.r = this.value; sync(); };
+  $("sM").onchange = function () { S.m = this.value; sync(); };
+  $("sC").onchange = function () { S.ct = this.value; sync(); };
+  $("sV").onchange = function () { S.v = this.value; sync(); };
+
+  // Beijing time
+  function bj() {
+    var p = {};
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Shanghai", hour12: false, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+      .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    var h = +p.hour % 24;
+    return { s: h * 3600 + +p.minute * 60 + +p.second, txt: p.year + "-" + p.month + "-" + p.day + " " + (h < 10 ? "0" : "") + h + ":" + p.minute + ":" + p.second };
+  }
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+
+  function renderNow() {
+    var t = bj();
+    $("clock").textContent = "北京时间 " + t.txt;
+    $("nowSub").textContent = S.m ? "按 " + S.m + " 规则" : "";
+    if (!C.ok) { $("now").innerHTML = '<p class="sub">' + (S.m ? "该区域暂无已确认的现行分时规则" : "无月度电价数据") + "</p>"; return; }
+    var i = Math.floor(t.s / 1800) % 48, c = C.pr[i], key = function (x) { return x.t + "|" + x.p; }, k = 1;
+    while (k < 48 && key(C.pr[(i + k) % 48]) === key(c)) k++;
+    var html = '<div class="x-now"><p class="x-now__p">' + sw(c.t) + (c.t ? PN[c.t] : "未覆盖") + (c.fb ? ' <span class="pill">未单列</span>' : "") + "</p>" +
+      '<p class="x-now__fig">' + fx(c.p) + " <small>元/kWh · " + hm(i) + " 时段</small></p>";
+    if (k >= 48) html += '<p class="sub">全天同一时段</p>';
+    else {
+      var rem = (i + k) * 1800 - t.s, n = C.pr[(i + k) % 48];
+      html += '<p class="sub">距 ' + hm((i + k) % 48) + " 切换为 " + (n.t ? PN[n.t] : "未覆盖") + "（" + fx(n.p) + "）</p>" +
+        '<p class="x-cd">' + pad(Math.floor(rem / 3600)) + ":" + pad(Math.floor(rem / 60) % 60) + ":" + pad(rem % 60) + "</p>";
+    }
+    $("now").innerHTML = html + "</div>";
+  }
+
+  function stats() {
+    var v = C.pr.map(function (x) { return x.p; }).filter(function (p) { return p != null; });
+    if (!C.ok || !v.length) return null;
+    var mx = Math.max.apply(null, v), mn = Math.min.apply(null, v);
+    return { mx: mx, mn: mn, avg: v.length === 48 ? v.reduce(function (a, b) { return a + b; }, 0) / 48 : null };
+  }
+
+  function renderKpis() {
+    var r = C.row || {}, st = stats(), hrs = {};
+    C.ts.forEach(function (t) { if (t) hrs[t] = (hrs[t] || 0) + 0.5; });
+    var k = function (l, v, u) { return '<div class="x-kpi"><span>' + l + "</span><b>" + v + (u ? " <small>" + u + "</small>" : "") + "</b></div>"; };
+    $("kpis").innerHTML =
+      k("平段价", fx(r.flat), "元/kWh") +
+      k("最大峰谷价差", st ? fx(st.mx - st.mn) : "—", "元/kWh") +
+      k("24h 平均价", st && st.avg != null ? fx(st.avg) : "—", "元/kWh") +
+      k("需量电价", fx(r.demand_price, 2), "元/kW·月") +
+      k("容量电价", fx(r.capacity_price, 2), "元/kVA·月") +
+      '<div class="x-kpi"><span>各时段小时数</span><div class="x-hrs">' +
+      (C.ok ? P.filter(function (t) { return hrs[t]; }).map(function (t) { return "<span>" + sw(t) + " " + PN[t] + " " + hrs[t] + "h</span>"; }).join("") : "—") + "</div></div>";
+  }
+
+  function nice(mx) {
+    var raw = mx / 4, e = Math.pow(10, Math.floor(Math.log10(raw || 1))), f = raw / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * e;
+  }
+  function frame(el, h) {
+    var W = Math.max(280, el.clientWidth || 600);
+    return { W: W, H: h, l: 46, r: 12, t: 12, b: 26 };
+  }
+  function yAxis(g, mx) {
+    var st = nice(mx), top = Math.ceil(mx / st) * st || 1, s = "";
+    for (var v = 0; v <= top + 1e-9; v += st) {
+      var y = g.t + (g.H - g.t - g.b) * (1 - v / top);
+      s += '<line x1="' + g.l + '" x2="' + (g.W - g.r) + '" y1="' + y + '" y2="' + y + '" style="stroke:var(--stroke-secondary)"/>' +
+        '<text x="' + (g.l - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + (+v.toFixed(3)) + "</text>";
+    }
+    return { s: s, y: function (v) { return g.t + (g.H - g.t - g.b) * (1 - v / top); } };
+  }
+  function tip(box, html, x, y) {
+    var t = box.querySelector(".x-tip");
+    if (!html) { t.style.display = "none"; return; }
+    t.innerHTML = html; t.style.display = "block";
+    var w = t.offsetWidth, bw = box.clientWidth;
+    t.style.left = Math.max(0, Math.min(bw - w, x + 12)) + "px";
+    t.style.top = Math.max(0, y - t.offsetHeight - 8) + "px";
+  }
+
+  function draw24() {
+    var el = $("c24");
+    $("c24sub").textContent = C.row ? S.v + " · " + S.ct : "";
+    if (!C.ok || !C.row || C.np) { el.innerHTML = '<p class="sub">' + (C.np ? "所选电价行未公布分时价格，请换分类·计价或电压等级" : C.row || !S.m ? (S.m ? "该区域暂无已确认的现行分时规则" : "无月度电价数据") : "无电价行") + "</p>"; $("leg24").innerHTML = ""; return; }
+    var g = frame(el, el.clientWidth < 500 ? 220 : 260), v = C.pr.map(function (x) { return x.p; }).filter(function (p) { return p != null; });
+    var ax = yAxis(g, (Math.max.apply(null, v.concat([0.1]))) * 1.08), pw = g.W - g.l - g.r, x = function (i) { return g.l + pw * i / 48; };
+    var base = g.H - g.b, s = ax.s, top = "";
+    C.pr.forEach(function (c, i) {
+      if (c.p == null) return;
+      var y = ax.y(c.p);
+      s += '<rect x="' + x(i) + '" y="' + y + '" width="' + (pw / 48 + 0.3) + '" height="' + (base - y) + '" style="fill:' + col(c.t) + ';opacity:' + (c.fb ? 0.08 : 0.16) + '"/>';
+      top += '<line x1="' + x(i) + '" x2="' + x(i + 1) + '" y1="' + y + '" y2="' + y + '" style="stroke:' + col(c.t) + ';stroke-width:2.5"' + (c.fb ? ' stroke-dasharray="4 3"' : "") + "/>";
+      var n = C.pr[i + 1];
+      if (n && n.p != null && n.p !== c.p) top += '<line x1="' + x(i + 1) + '" x2="' + x(i + 1) + '" y1="' + y + '" y2="' + ax.y(n.p) + '" style="stroke:var(--text-tertiary)"/>';
+    });
+    for (var h = 0; h <= 24; h += 3) s += '<text x="' + x(h * 2) + '" y="' + (g.H - 6) + '" text-anchor="' + (h === 0 ? "start" : h === 24 ? "end" : "middle") + '">' + pad(h) + ":00</text>";
+    var nx = x(bj().s / 1800);
+    top += '<line x1="' + nx + '" x2="' + nx + '" y1="' + g.t + '" y2="' + base + '" style="stroke:var(--text-primary)" stroke-dasharray="3 3"/><text x="' + (nx + 4) + '" y="' + (g.t + 10) + '" style="fill:var(--text-primary)">现在</text>';
+    el.innerHTML = '<svg viewBox="0 0 ' + g.W + " " + g.H + '" height="' + g.H + '" role="img" aria-label="24 小时分时电价阶梯图">' + s + top + '<line id="c24h" x1="0" x2="0" y1="' + g.t + '" y2="' + base + '" style="stroke:var(--text-secondary);display:none"/></svg><div class="x-tip"></div>';
+    var svg = el.querySelector("svg"), hl = $("c24h");
+    var move = function (e) {
+      var b = svg.getBoundingClientRect(), px = (e.clientX - b.left) * g.W / b.width, i = Math.floor((px - g.l) / pw * 48);
+      if (i < 0 || i > 47) { tip(el); hl.style.display = "none"; return; }
+      var c = C.pr[i]; hl.setAttribute("x1", x(i + 0.5)); hl.setAttribute("x2", x(i + 0.5)); hl.style.display = "";
+      tip(el, hm(i) + "–" + hm(i + 1) + "<br>" + (c.t ? PN[c.t] : "未覆盖") + " " + fx(c.p) + " 元/kWh" + (c.fb ? "<br>未单列，按" + (c.t === "sharp" ? "高峰" : "低谷") + "价" : ""), e.clientX - b.left, e.clientY - b.top);
+    };
+    svg.onpointermove = move; svg.onpointerdown = move;
+    svg.onpointerleave = function () { tip(el); hl.style.display = "none"; };
+    var used = uniq(C.ts.filter(Boolean));
+    $("leg24").innerHTML = P.filter(function (t) { return used.indexOf(t) >= 0; }).map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") +
+      (C.pr.some(function (c) { return c.fb; }) ? "<span>虚线 = 未单列，按高峰/低谷价</span>" : "");
+  }
+
+  function renderComp() {
+    var r = C.row;
+    if (!r) { $("comp").innerHTML = '<p class="sub">无电价行</p>'; return; }
+    var row = function (l, v, cls) { return '<div class="row' + (cls || "") + '"><dt>' + l + "</dt><dd>" + fx(v, 6) + "</dd></div>"; };
+    $("comp").innerHTML = '<div class="pair"><div class="breakdown"><dl>' +
+      row("购电价", r.purchase_price) + row("线损", r.line_loss) + row("输配", r.tdp) + row("系统运行费", r.system_op) + row("政府性基金", r.gov_fund) +
+      row("电度价", r.energy_price, " row--total") + '</dl></div><div class="breakdown"><dl>' +
+      P.map(function (t) { return '<div class="row"><dt>' + sw(t) + " " + PN[t] + "</dt><dd>" + fx(r[t], 6) + "</dd></div>"; }).join("") + "</dl></div></div>";
+  }
+
+  function renderVolt() {
+    $("vsub").textContent = S.m ? R[S.r].name + " · " + S.m + " · " + (S.ct || "—") : "";
+    var hd = ["电压", "尖峰", "高峰", "平段", "低谷", "深谷", "需量", "容量"];
+    if (!C.rows.length) { $("vt").innerHTML = "<caption>无数据</caption>"; return; }
+    $("vt").innerHTML = "<thead><tr>" + hd.map(function (h) { return '<th scope="col">' + h + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      C.rows.map(function (o) {
+        return '<tr class="x-click' + (o.voltage === S.v ? " is-highlight" : "") + '" data-v="' + esc(o.voltage) + '"><th scope="row">' + esc(o.voltage) + "</th>" +
+          P.map(function (t, j) { return '<td class="num" data-label="' + hd[j + 1] + '">' + fx(o[t]) + "</td>"; }).join("") +
+          '<td data-label="需量">' + fx(o.demand_price, 2) + '</td><td data-label="容量">' + fx(o.capacity_price, 2) + "</td></tr>";
+      }).join("") + "</tbody>";
+    [].forEach.call($("vt").querySelectorAll("tr[data-v]"), function (tr) { tr.onclick = function () { S.v = tr.getAttribute("data-v"); sync(); }; });
+  }
+
+  function draw12() {
+    var el = $("c12"), ref = C.row;
+    $("msub").textContent = ref ? ref.voltage + " · " + S.ct + "，元/kWh" : "";
+    if (!ref) { el.innerHTML = '<p class="sub">无数据</p>'; $("leg12").innerHTML = ""; return; }
+    var pts = WIN.map(function (m) {
+      var rs = rowsOf(S.r, m).filter(function (o) { return ctOf(o) === S.ct; });
+      return rs.filter(function (o) { return o.voltage === ref.voltage; })[0] || rs.filter(function (o) { return o.voltage_rank === ref.voltage_rank; })[0] || null;
+    });
+    var ser = P.filter(function (t) { return pts.some(function (o) { return o && o[t] != null; }); });
+    var all = []; pts.forEach(function (o) { if (o) ser.forEach(function (t) { if (o[t] != null) all.push(o[t]); }); });
+    if (!all.length) { el.innerHTML = '<p class="sub">无数据</p>'; return; }
+    var g = frame(el, 240), ax = yAxis(g, Math.max.apply(null, all) * 1.08), pw = g.W - g.l - g.r, x = function (i) { return g.l + pw * (i + 0.5) / 12; }, s = ax.s;
+    var si = WIN.indexOf(S.m);
+    if (si >= 0) s += '<rect x="' + (g.l + pw * si / 12) + '" y="' + g.t + '" width="' + pw / 12 + '" height="' + (g.H - g.t - g.b) + '" style="fill:var(--fill-tertiary)"/>';
+    WIN.forEach(function (m, i) { if (g.W > 460 || i % 2 === 0) s += '<text x="' + x(i) + '" y="' + (g.H - 6) + '" text-anchor="middle">' + mlab(m) + "</text>"; });
+    ser.forEach(function (t) {
+      var d = "", pen = false, dots = "";
+      pts.forEach(function (o, i) {
+        var v = o ? o[t] : null;
+        if (v == null) { pen = false; return; }
+        d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + ax.y(v).toFixed(1); pen = true;
+        dots += '<circle cx="' + x(i) + '" cy="' + ax.y(v) + '" r="3" style="fill:' + col(t) + '"/>';
+      });
+      s += '<path d="' + d + '" style="fill:none;stroke:' + col(t) + ';stroke-width:1.5;stroke-linejoin:round"/>' + dots;
+    });
+    el.innerHTML = '<svg viewBox="0 0 ' + g.W + " " + g.H + '" height="' + g.H + '" role="img" aria-label="12 个月分时电价走势">' + s + '</svg><div class="x-tip"></div>';
+    var svg = el.querySelector("svg");
+    var move = function (e) {
+      var b = svg.getBoundingClientRect(), px = (e.clientX - b.left) * g.W / b.width, i = Math.floor((px - g.l) / pw * 12);
+      if (i < 0 || i > 11) return tip(el);
+      var o = pts[i];
+      tip(el, WIN[i] + "<br>" + (o ? ser.map(function (t) { return PN[t] + " " + fx(o[t]); }).join("<br>") : "未入库"), e.clientX - b.left, e.clientY - b.top);
+    };
+    svg.onpointermove = move; svg.onpointerdown = move; svg.onpointerleave = function () { tip(el); };
+    $("leg12").innerHTML = ser.map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") + "<span>断开 = 当月未入库或未单列</span>";
+  }
+
+  function renderCal() {
+    var h = "<span></span>";
+    for (var k = 0; k < 24; k += 3) h += '<span class="x-h">' + k + "</span>";
+    WIN.forEach(function (m) {
+      var ts = slots(rule(S.r, m)), has = (R[S.r].months || []).indexOf(m) >= 0;
+      h += '<span class="x-ml' + (m === S.m ? " is-sel" : "") + '"' + (has ? ' role="button" tabindex="0" data-m="' + m + '" style="cursor:pointer"' : "") + ">" + mlab(m) + "</span>" +
+        ts.map(function (t, i) { return '<span class="x-c" style="--c:' + col(t) + '" title="' + m + " " + hm(i) + "–" + hm(i + 1) + " " + (t ? PN[t] : "无规则") + '"></span>'; }).join("");
+    });
+    $("cal").innerHTML = h;
+    [].forEach.call($("cal").querySelectorAll("[data-m]"), function (n) {
+      n.onclick = n.onkeydown = function (e) { if (e.type === "keydown" && e.key !== "Enter") return; S.m = n.getAttribute("data-m"); sync(); };
+    });
+    $("legcal").innerHTML = P.map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") + "<span>" + sw(null) + "无规则</span>";
+  }
+
+  var RS = { k: "spread", d: -1 };
+  function renderRank() {
+    var m = S.m || WIN[11], re = /1[-~～]10|10千伏|10\(20\)千伏/;
+    $("rsub").textContent = m + "，元/kWh";
+    var list = [];
+    Object.keys(R).forEach(function (k) {
+      if ((R[k].months || []).indexOf(m) < 0) return;
+      var rs = rowsOf(k, m); if (!rs.length) return;
+      var key = function (o) { return [re.test(o.voltage || "") ? 0 : 1, o.tariff_type === "单一制" ? 0 : 1, o.voltage_rank == null ? 99 : o.voltage_rank]; };
+      var o = rs.map(function (o, i) { return { o: o, k: key(o), i: i }; }).sort(function (a, b) {
+        for (var j = 0; j < 3; j++) if (a.k[j] !== b.k[j]) return a.k[j] - b.k[j];
+        return a.i - b.i;
+      })[0].o;
+      list.push({ code: k, name: R[k].name, ct: ctOf(o), voltage: o.voltage, peak: o.peak, valley: o.valley, spread: o.peak != null && o.valley != null ? o.peak - o.valley : null, flat: o.flat });
+    });
+    list.sort(function (a, b) {
+      var x = a[RS.k], y = b[RS.k];
+      if (x == null) return y == null ? 0 : 1; if (y == null) return -1;
+      return typeof x === "number" ? (x - y) * RS.d : String(x).localeCompare(String(y), "zh") * RS.d;
+    });
+    var cols = [["name", "区域"], ["ct", "分类·计价"], ["voltage", "电压"], ["peak", "高峰"], ["valley", "低谷"], ["spread", "价差"], ["flat", "平段"]];
+    $("rt").innerHTML = "<thead><tr>" + cols.map(function (c) {
+      return '<th scope="col"><button class="x-sort" data-k="' + c[0] + '"' + (RS.k === c[0] ? ' aria-sort="' + (RS.d > 0 ? "ascending" : "descending") + '"' : "") + ">" + c[1] + (RS.k === c[0] ? (RS.d > 0 ? " ↑" : " ↓") : "") + "</button></th>";
+    }).join("") + "</tr></thead><tbody>" + list.map(function (r, i) {
+      return '<tr class="x-click' + (r.code === S.r ? " is-highlight" : "") + '" data-r="' + r.code + '"><th scope="row">' + (i + 1) + ". " + esc(r.name) + "</th>" +
+        '<td data-label="分类·计价">' + esc(r.ct) + '</td><td data-label="电压">' + esc(r.voltage) + "</td>" +
+        ["peak", "valley", "spread", "flat"].map(function (k, j) { return '<td class="num" data-label="' + ["高峰", "低谷", "价差", "平段"][j] + '">' + fx(r[k]) + "</td>"; }).join("") + "</tr>";
+    }).join("") + "</tbody>";
+    [].forEach.call($("rt").querySelectorAll(".x-sort"), function (b) {
+      b.onclick = function () { var k = b.getAttribute("data-k"); RS.d = RS.k === k ? -RS.d : (k === "name" || k === "ct" || k === "voltage" ? 1 : -1); RS.k = k; renderRank(); };
+    });
+    [].forEach.call($("rt").querySelectorAll("tr[data-r]"), function (tr) { tr.onclick = function () { S.r = tr.getAttribute("data-r"); sync(); window.scrollTo({ top: 0, behavior: "smooth" }); }; });
+  }
+
+  function renderEss() {
+    var st = stats(), el = $("ess");
+    if (!st) { el.innerHTML = '<p class="sub">' + (C.np ? "所选电价行未公布分时价格，无法测算" : C.row ? "该区域暂无已确认的现行分时规则，无法测算" : "无电价数据") + "</p>"; return; }
+    var cap = Math.max(0, +$("eCap").value || 0), eff = Math.min(100, Math.max(0, +$("eEff").value || 0)) / 100, cyc = +$("eCyc").value, days = Math.max(0, +$("eDays").value || 0);
+    var c1 = Math.max(0, st.mx * eff - st.mn), c2 = 0, how = "";
+    if (cyc === 2) {
+      // runs of equal price around the clock; local minima/maxima alternate
+      var p = C.pr.map(function (x) { return x.p; }), s0 = 0;
+      while (s0 < 48 && p[s0] === p[(s0 + 47) % 48]) s0++;
+      var runs = [];
+      for (var i = 0; i < 48; i++) { var v = p[(s0 + i) % 48]; if (!runs.length || runs[runs.length - 1] !== v) runs.push(v); }
+      if (runs.length > 1 && runs[0] === runs[runs.length - 1]) runs.pop();
+      var n = runs.length, pairs = [];
+      if (n > 2 && runs.indexOf(null) < 0) {
+        var isMax = function (j) { return runs[j] > runs[(j + n - 1) % n] && runs[j] > runs[(j + 1) % n]; };
+        var isMin = function (j) { return runs[j] < runs[(j + n - 1) % n] && runs[j] < runs[(j + 1) % n]; };
+        for (var j = 0; j < n; j++) if (isMax(j)) {
+          var lo = null;
+          for (var q = 1; q < n; q++) { var jj = (j - q + n) % n; if (isMax(jj)) break; if (isMin(jj) && (lo == null || runs[jj] < lo)) lo = runs[jj]; }
+          if (lo != null) pairs.push(runs[j] * eff - lo);
+        }
+      }
+      pairs.sort(function (a, b) { return b - a; });
+      if (pairs.length >= 2) { c2 = Math.max(0, pairs[1]); how = "第二次：次低谷充电、次高峰放电"; }
+      else { var r = C.row; c2 = r.flat != null && r.valley != null ? Math.max(0, r.flat * eff - r.valley) : 0; how = "无两段独立峰谷窗口，第二次按 平段×效率 − 低谷" + (r.flat == null || r.valley == null ? "（缺价，记 0）" : ""); }
+    }
+    var daily = (c1 + c2) * cap, yr = daily * days, money = function (v) { return v.toLocaleString("zh-CN", { maximumFractionDigits: 0 }); };
+    el.innerHTML = '<div class="breakdown"><dl>' +
+      '<div class="row"><dt>第一次循环<small>(' + fx(st.mx) + "×" + Math.round(eff * 100) + "% − " + fx(st.mn) + ") × " + cap + " kWh</small></dt><dd>" + money(c1 * cap) + " 元</dd></div>" +
+      (cyc === 2 ? '<div class="row"><dt>第二次循环<small>' + how + "，" + fx(c2) + " 元/kWh</small></dt><dd>" + money(c2 * cap) + " 元</dd></div>" : "") +
+      '<div class="row"><dt>每日收益</dt><dd>' + money(daily) + " 元</dd></div>" +
+      '<div class="row row--total"><dt>年收益（' + days + " 天）</dt><dd>" + money(yr) + " 元</dd></div></dl>" +
+      '<p class="fineprint">未计容量/需量电费与电池衰减；按所选月份正常工作日规则估算。</p></div>';
+  }
+  ["eCap", "eEff", "eCyc", "eDays"].forEach(function (id) { $(id).oninput = renderEss; $(id).onchange = renderEss; });
+
+  var covSel = null;
+  function renderCov() {
+    var h = "<span></span>" + WIN.map(function (m) { return '<span class="x-h">' + +m.slice(5) + "</span>"; }).join("");
+    var keys = Object.keys(R).sort(function (a, b) { var o = { "国网": 0, "南方电网": 1 }; var x = o[grp(R[a].grid)], y = o[grp(R[b].grid)]; return (x == null ? 2 : x) - (y == null ? 2 : y); });
+    keys.forEach(function (k) {
+      var ms = R[k].months || [];
+      h += '<button type="button" data-c="' + k + '" title="' + esc(R[k].name) + '"' + (k === covSel ? ' class="is-sel"' : "") + ">" + esc(R[k].name) + "</button>" +
+        WIN.map(function (m) { return '<i class="' + (ms.indexOf(m) >= 0 ? "on" : "") + '" title="' + esc(R[k].name) + " " + m + (ms.indexOf(m) >= 0 ? " 已入库" : " 缺") + '"></i>'; }).join("");
+    });
+    $("cov").innerHTML = h;
+    [].forEach.call($("cov").querySelectorAll("button"), function (b) { b.onclick = function () { covSel = b.getAttribute("data-c"); renderCov(); }; });
+    var n = $("covn");
+    if (!covSel) { n.innerHTML = '<p class="sub">缺口：' + Object.keys(GAP).map(function (k) { return GAP[k]; }).join("；") + "。</p>"; return; }
+    var r = R[covSel];
+    n.innerHTML = "<p><strong>" + esc(r.name) + "</strong> · " + grp(r.grid) + " · " + (r.months || []).length + " 个月 · " + (r.tou || []).length + " 条分时规则</p>" +
+      (GAP[covSel] ? "<p>" + GAP[covSel] + "</p>" : "") +
+      ((r.notes || []).length ? "<ul>" + r.notes.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : '<p class="sub">无备注</p>') +
+      (covSel !== S.r ? '<div class="links"><button class="btn" type="button" id="covGo">切换到' + esc(r.name) + "</button></div>" : "");
+    if ($("covGo")) $("covGo").onclick = function () { S.r = covSel; sync(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  }
+
+  function render() {
+    var msg = [];
+    if (!S.m) msg.push(GAP[S.r] || "该区域暂无月度代理购电数据");
+    else if (!C.ru) msg.push("该区域暂无已确认的现行分时规则，仅显示电价表格。");
+    else if (GAP[S.r]) msg.push(GAP[S.r]);
+    $("notice").textContent = msg.join(" ");
+    renderNow(); renderKpis(); draw24(); renderComp(); renderEss(); renderVolt(); draw12(); renderCal(); renderRank(); renderCov();
+  }
+
+  var lastSlot = -1;
+  setInterval(function () {
+    renderNow();
+    var s = Math.floor(bj().s / 1800);
+    if (s !== lastSlot) { if (lastSlot >= 0) draw24(); lastSlot = s; }
+  }, 1000);
+  var rw = 0, rt;
+  window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { var w = $("c24").clientWidth; if (w !== rw) { rw = w; draw24(); draw12(); } }, 150); });
+  sync();
+  lastSlot = Math.floor(bj().s / 1800);
+})();
+    </script>
+  </body>
+</html>

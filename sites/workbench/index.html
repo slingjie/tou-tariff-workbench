@@ -92,7 +92,73 @@
         .x-cal { grid-template-columns: 44px repeat(48, minmax(0, 1fr)); }
         .x-cov button { min-height: 28px; display: flex; align-items: center; }
       }
+      #tabCalc .x-quick { grid-column: 1 / -1; align-items: center; }
+      #tabCalc .x-quick span { font: var(--type-caption); color: var(--text-secondary); }
+      #tabCalc button.btn, #tabCalc .x-sort, #tabCalc .x-det summary { cursor: pointer; }
+      #tabCalc .x-flags { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+      #tabCalc .x-flags li { font: var(--type-small); color: var(--text-secondary); }
+      #tabCalc .x-flags b { color: var(--text-primary); }
+      #tabCalc .x-err { color: var(--fill-system-red); }
+      #tabCalc .x-total > * { border-top: 1px solid var(--stroke-primary); font-weight: var(--weight-bold); }
+      #tabCalc .x-win { font: var(--type-caption); color: var(--text-secondary); margin-left: auto; }
+      #tabCalc .x-win b { color: var(--text-primary); font-weight: var(--weight-medium); }
+      #tabCalc .x-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+      #tabCalc .x-pick label { display: flex; align-items: center; gap: 8px; font: var(--type-tag); color: var(--text-secondary); }
+      #tabCalc .x-pick select { min-height: var(--tap); padding: 0 12px; border: 1px solid var(--stroke-primary); border-radius: var(--r-s); background: var(--fill-primary-on); color: var(--text-primary); font: var(--type-small); }
+      #tabCalc .x-pick p { font: var(--type-caption); color: var(--text-secondary); }
+      #tabCalc .x-stripbox { padding: 20px; border-radius: var(--r-m); border: 1px solid var(--stroke-secondary); display: grid; gap: 10px; }
+      #tabCalc .x-strip { position: relative; height: 44px; margin: 8px 0; border-radius: 6px; }
+      #tabCalc .x-seg { position: absolute; top: 0; bottom: 0; display: grid; place-items: center; overflow: hidden; color: var(--chart-on-colour); font: var(--type-caption); border-right: 1px solid var(--fill-primary-on); }
+      #tabCalc .x-veil { position: absolute; top: 0; bottom: 0; background: var(--fill-primary-on); opacity: .62; }
+      #tabCalc .x-bracket { position: absolute; top: -7px; bottom: -7px; border: 2px solid var(--text-primary); border-radius: 6px; pointer-events: none; }
+      #tabCalc .x-ticks { position: relative; height: 16px; font: var(--type-caption); color: var(--text-secondary); }
+      #tabCalc .x-ticks span { position: absolute; transform: translateX(-50%); font-variant-numeric: tabular-nums; }
+      #tabCalc .x-ticks span:first-child { transform: none; }
+      #tabCalc .x-ticks span:last-child { transform: translateX(-100%); }
+      #tabCalc .x-legend { display: flex; flex-wrap: wrap; gap: 16px; font: var(--type-caption); color: var(--text-secondary); }
+      #tabCalc .x-legend i { display: inline-block; width: 12px; height: 12px; vertical-align: -2px; margin-right: 6px; border-radius: 3px; }
+      #tabCalc .x-legend i.x-bk { background: none; border: 2px solid var(--text-primary); }
+      #tabCalc .x-det { border-top: 1px solid var(--stroke-secondary); }
+      #tabCalc .x-det summary { display: flex; align-items: center; min-height: var(--tap); font: var(--type-label); }
+      #tabCalc .x-det[open] summary { margin-bottom: 16px; }
+      #tabCalc .x-sort { background: none; border: 0; padding: 0; font: inherit; color: inherit; min-height: 24px; }
+      #tabCalc .x-sort[aria-sort]::after { content: " ↕"; }
+      #tabCalc .x-sort[data-dir="asc"]::after { content: " ↑"; color: var(--text-primary); }
+      #tabCalc .x-sort[data-dir="desc"]::after { content: " ↓"; color: var(--text-primary); }
+      #tabCalc .x-csv { width: 100%; min-height: 160px; padding: 12px; border: 1px solid var(--stroke-primary); border-radius: var(--r-s); background: var(--fill-tertiary); color: var(--text-primary); font: var(--weight-regular) var(--size-caption)/1.5 "Geist Mono", ui-monospace, monospace; resize: vertical; }
+      #tabCalc .x-notes { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-sel input { min-height: 36px; max-width: 100%; padding: 6px 10px; border-radius: var(--r-s); border: 1px solid var(--stroke-primary); background: var(--fill-primary-on); color: var(--text-primary); font: var(--type-small); }
+      .x-tabs { flex-basis: 100%; display: flex; gap: 6px; margin-top: 2px; }
+      .x-tab { all: unset; cursor: pointer; padding: 6px 14px; border-radius: 999px; font: var(--type-small); color: var(--text-secondary); border: 1px solid var(--stroke-secondary); }
+      .x-tab:hover { background: var(--hover-wash); }
+      .x-tab[aria-selected="true"] { background: var(--fill-primary); color: var(--text-primary-on); border-color: var(--fill-primary); }
+      .x-tab:focus-visible { outline: 2px solid var(--fill-primary); outline-offset: 2px; }
+      #tabCalc .x-cform { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 14px; }
+      #tabCalc .x-cform .x-sel { min-width: 120px; }
+      #tabCalc .x-dtbox { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 14px; }
+      #tabCalc .x-chk { display: flex; align-items: center; gap: 8px; min-height: 36px; font: var(--type-caption); color: var(--text-secondary); cursor: pointer; }
+      #tabCalc .x-chk input { width: 18px; height: 18px; margin: 0; accent-color: var(--fill-primary); }
+      #tabCalc .x-quick { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+      #tabCalc .x-cfine { margin-top: 10px; display: grid; gap: 4px; }
+      #tabCalc .x-cfine:empty { display: none; }
+      #tabCalc .x-cblock { margin-top: 14px; }
+      #tabCalc .x-notice ul { margin-top: 6px; }
+      #tabCalc .x-fold > summary { list-style: none; cursor: pointer; }
+      #tabCalc .x-fold > summary::-webkit-details-marker { display: none; }
+      #tabCalc .x-fold > summary h2::after { content: "▾"; margin-left: auto; color: var(--text-secondary); }
+      #tabCalc .x-fold:not([open]) > summary h2 { margin-bottom: 0; }
+      #tabCalc .x-fold:not([open]) > summary h2::after { content: "▸"; }
+      #tabCalc .x-card > summary > h2 { font: var(--type-body-strong); margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+      #tabCalc .x-card > summary > h2 small { font: var(--type-caption); color: var(--text-secondary); }
+      #tabCalc .x-card .chart { margin-top: 16px; }
+      [hidden] { display: none !important; }
+      @media (max-width: 599px) {
+        .x-sel input { min-height: var(--tap); width: 100%; }
+        #tabCalc .x-cform .x-sel { flex: 1 1 40%; }
+        .x-tab { flex: 1 1 0; text-align: center; padding: 10px 8px; }
+      }
     </style>
+    <link rel="stylesheet" href="hark-charts.css" />
   </head>
   <body>
     <div class="page" id="top">
@@ -102,8 +168,13 @@
         <label class="x-sel">月份<select id="sM"></select></label>
         <label class="x-sel">分类·计价<select id="sC"></select></label>
         <label class="x-sel">电压等级<select id="sV"></select></label>
+        <nav class="x-tabs" role="tablist" aria-label="视图">
+          <button type="button" class="x-tab" role="tab" id="tbWb" aria-controls="tabWb" aria-selected="true">工作台</button>
+          <button type="button" class="x-tab" role="tab" id="tbCalc" aria-controls="tabCalc" aria-selected="false">综合电价计算器</button>
+        </nav>
       </header>
       <main class="main">
+        <div id="tabWb" role="tabpanel" aria-labelledby="tbWb">
         <p class="x-notice" id="notice"></p>
         <div class="x-grid">
           <section class="x-card x-s4" aria-live="polite"><h2>当前时段 <small id="nowSub"></small></h2><div id="now"></div></section>
@@ -124,6 +195,99 @@
           <section class="x-card x-s6"><h2>12×24 分时日历 <small>正常工作日规则，点月份切换</small></h2><div class="x-cal" id="cal"></div><div class="x-legend" id="legcal"></div></section>
           <section class="x-card"><h2>全国价差排行 <small id="rsub"></small></h2><div class="table-wrap"><table id="rt"></table></div><p class="fineprint">每区域取代表行：优先 1-10 千伏、单一制，否则最低电压等级。价差 = 高峰 − 低谷。点行切换区域。</p></section>
           <section class="x-card"><h2>数据覆盖 <small>40 区域 × 12 个月，深色为已入库，点区域看说明</small></h2><div class="x-cov" id="cov"></div><div class="x-covnotes" id="covn"></div></section>
+        </div>
+        </div>
+
+        <div id="tabCalc" role="tabpanel" aria-labelledby="tbCalc" hidden>
+        <div class="x-grid">
+          <section class="x-card" id="calc"><h2>日内时间窗 <small>区域、月份、分类·计价、电压等级随顶部选择；数据 2025-11 至 2026-10，元/kWh</small></h2>
+            <form class="x-cform" id="form" onsubmit="return false">
+              <div hidden><select id="region" aria-hidden="true" tabindex="-1"></select><select id="combo" aria-hidden="true" tabindex="-1"></select><select id="volt" aria-hidden="true" tabindex="-1"></select></div>
+              <label class="x-sel">开始时刻<input type="time" id="start" step="900" value="08:00" /></label>
+              <label class="x-sel">结束时刻<input type="time" id="end" step="900" value="16:00" /></label>
+              <div class="x-dtbox" id="dtBox" hidden>
+                <label class="x-sel">日类型<select id="dt"></select></label>
+                <label class="x-chk" id="wtBox" hidden><input type="checkbox" id="wt" /> 按实际日历加权（特殊日按天数计入）</label>
+              </div>
+              <div class="links x-quick">
+                <span class="x-cap">快捷：</span>
+                <button type="button" class="btn" data-w="08:00|16:00">08:00–16:00</button>
+                <button type="button" class="btn" data-w="00:00|00:00">全天 00:00–24:00</button>
+                <button type="button" class="btn" data-w="08:00|20:00">白班 08:00–20:00</button>
+                <button type="button" class="btn" data-w="22:00|06:00">夜间 22:00–06:00</button>
+                <span class="x-win" id="winInfo" aria-live="polite"></span>
+              </div>
+            </form>
+            <div class="x-cfine">
+              <p class="fineprint" id="dtNote" hidden></p>
+              <p class="fineprint">结束早于开始时跨午夜计算（如 22:00→06:00 = 22:00–24:00 + 00:00–06:00）；开始等于结束为全天 24 小时。</p>
+            </div>
+            <p class="x-notice x-cblock" id="msg" hidden aria-live="polite"><strong>无法计算：</strong><span id="msgText"></span></p>
+            <div class="x-kpis x-dep x-cblock" id="stats"></div>
+            <div class="x-notice x-dep x-cblock" id="flagBox" hidden><strong>计算提示</strong><ul class="x-flags" id="flags"></ul></div>
+            <details class="x-det x-dep x-cblock" id="notesDet">
+              <summary>区域数据说明（管线原始备注）</summary>
+              <ul class="x-notes" id="notes"></ul>
+            </details>
+          </section>
+          <section class="x-card x-dep" id="monthly"><h2>12 个月逐月窗口综合电价 <small>灰底行为查看月份；末行为年度均值</small></h2>
+            <div class="x-stripbox">
+              <div class="x-pick">
+                <label>查看月份 <select id="sm" aria-label="24 小时分时条的月份"></select></label>
+                <p id="stripSub"></p>
+              </div>
+              <div id="strip"></div>
+            </div>
+            <div class="table-wrap x-cblock">
+              <table>
+                <thead><tr><th scope="col">月份</th><th scope="col">窗口内时段小时数</th><th scope="col">尖峰</th><th scope="col">高峰</th><th scope="col">平段</th><th scope="col">低谷</th><th scope="col">深谷</th><th scope="col">窗口综合电价</th><th scope="col">全天综合电价</th><th scope="col">日类型</th><th scope="col">状态/备注</th></tr></thead>
+                <tbody id="mBody"></tbody>
+              </table>
+            </div>
+            <figure class="chart">
+              <figcaption class="chart__cap" id="chartCap">窗口综合电价与全天综合电价<small>2025-11 至 2026-10，元/kWh</small></figcaption>
+              <div class="chart__canvas"><canvas id="chart" role="img" aria-label="12 个月窗口综合电价与全天综合电价折线图"></canvas></div>
+            </figure>
+          </section>
+          <details class="x-card x-s6 x-dep x-fold" id="process" open><summary><h2>逐段核对窗口综合电价 <small id="procSub"></small></h2></summary>
+            <div class="x-pick"><label>月份 <select id="pm" aria-label="计算过程的月份"></select></label></div>
+            <div class="breakdown" id="proc"></div>
+          </details>
+          <details class="x-card x-s6 x-dep x-fold" id="volts" open><summary><h2>同一类别下各电压等级 <small id="voltSub"></small></h2></summary>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th scope="col">电压等级</th><th scope="col">最新月窗口综合电价</th><th scope="col">年度综合电价</th></tr></thead>
+                <tbody id="vBody"></tbody>
+              </table>
+            </div>
+          </details>
+          <section class="x-card" id="nation"><h2>各区域代表性电价的窗口综合电价 <small>每区域取 1-10 千伏，单一制优先；无此电压时取最低电压等级</small></h2>
+            <details class="x-det" id="natDet">
+              <summary>展开全国对比（按所选时间窗计算）</summary>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr>
+                    <th scope="col"><button type="button" class="x-sort" data-k="name" aria-sort="none">区域</button></th>
+                    <th scope="col">分类·计价</th>
+                    <th scope="col">电压</th>
+                    <th scope="col"><button type="button" class="x-sort" data-k="latest" aria-sort="none">最新月窗口综合电价</button></th>
+                    <th scope="col"><button type="button" class="x-sort" data-k="annual" aria-sort="none">年度综合电价</button></th>
+                  </tr></thead>
+                  <tbody id="nBody"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <details class="x-card x-dep x-fold" id="export" open><summary><h2>导出月度明细与汇总 <small>CSV，UTF-8</small></h2></summary>
+            <div class="links">
+              <button type="button" class="btn" id="copyBtn">复制 CSV</button>
+              <button type="button" class="btn" id="dlBtn">下载 CSV 文件</button>
+            </div>
+            <p class="fineprint" id="exStatus" aria-live="polite">下载可能被浏览器沙箱拦截；拦截时请复制下方文本。</p>
+            <textarea class="x-csv" id="csv" readonly aria-label="CSV 文本"></textarea>
+          </details>
+        </div>
+        <p class="fineprint x-cblock">窗口综合电价 = Σ(窗口内各时段时长 × 时段电价) ÷ 窗口时长；每月按当月分时规则与价格计算，年度值为近 12 个月月度值的算术平均。不涉及用电量；不含需量/容量电费；有确定特殊日表的区域（安徽、上海、浙江、江西、山西、江苏、湖北）默认按实际日历加权，节假日依国办发明电〔2025〕7号；其他区域默认按普通日规则，可在「日类型」切换尖峰日、高温日、节假日、周末规则。</p>
         </div>
       </main>
       <footer class="foot">
@@ -227,7 +391,12 @@
     C.ok = !!C.ru && C.ts.some(Boolean);
     C.np = C.ok && !!C.row && !C.pr.some(function (x) { return x.p != null; });
     render();
+    if (window.__calcSync) window.__calcSync(S);
   }
+  window.__wbState = function () { return S; };
+  window.__wbSetMonth = function (m) { if ((R[S.r].months || []).indexOf(m) >= 0 && S.m !== m) { S.m = m; sync(); } };
+  window.__wbSetRegion = function (r) { if (R[r] && S.r !== r) { S.r = r; sync(); } };
+  window.__wbRender = function () { render(); };
   $("sR").onchange = function () { S.r = this.value; sync(); };
   $("sM").onchange = function () { S.m = this.value; sync(); };
   $("sC").onchange = function () { S.ct = this.value; sync(); };
@@ -526,6 +695,655 @@
   window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { var w = $("c24").clientWidth; if (w !== rw) { rw = w; draw24(); draw12(); } }, 150); });
   sync();
   lastSlot = Math.floor(bj().s / 1800);
+})();
+    </script>
+    <script src="chart.js"></script>
+    <script src="datalabels.js"></script>
+    <script src="hark-charts.js"></script>
+    <script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var B = null;
+  try { B = JSON.parse($("data").textContent); } catch (e) { B = null; }
+  function fail(t) { $("msg").hidden = false; $("msgText").innerHTML = t; document.querySelectorAll(".x-dep").forEach(function (n) { n.hidden = true; }); }
+  if (!B || !B.regions || !B.fields) { fail("<strong>数据未载入。</strong>页面内嵌的电价数据缺失或无法解析。"); return; }
+
+  var FI = {}; B.fields.forEach(function (f, i) { FI[f] = i; });
+  var SEGN = { sharp: "尖峰", peak: "高峰", flat: "平段", valley: "低谷", deep_valley: "深谷" };
+  var SEGS = { sharp: "尖", peak: "峰", flat: "平", valley: "谷", deep_valley: "深" };
+  var ORDER = ["sharp", "peak", "flat", "valley", "deep_valley"];
+  var DTL = { normal: "普通日", sharp: "尖峰执行日", high_temp: "高温日（尖峰）", holiday: "节假日（深谷）", weekend: "周末" };
+  var DTO = ["normal", "sharp", "high_temp", "holiday", "weekend"];
+  var dtl = function (k) { return DTL[k] || k; };
+  var SEGC = { sharp: "var(--chart-bad)", peak: "var(--chart-3)", flat: "var(--chart-5)", valley: "var(--chart-1)", deep_valley: "color-mix(in oklab, var(--chart-1), black 32%)" };
+  var GD = ["guangdong-eastwest", "guangdong-huizhou", "guangdong-jiangmen", "guangdong-north", "guangdong-prd5", "shenzhen", "shenzhen-shenshan"];
+  var DTNOTE = {
+    anhui: "安徽：尖峰仅 7/15–8/31 20–22 点、12/15–1/31 19–21 点；节假日（3 天以上）深谷 11–15 点；均限 ≥315kVA 两部制工业。",
+    sichuan: "四川：7–8 月全月尖峰；其他月份仅成都连续 3 天 ≥35℃ 时执行，未建规则。",
+    "hebei-south": "河北南网：表内每月都印尖峰/深谷价，但只在政策规定季节执行（规则已体现），其他月份的印出价不参与计算。",
+    jibei: "冀北：表内每月都印尖峰/深谷价，但只在政策规定季节执行（规则已体现），其他月份的印出价不参与计算。",
+    shandong: "山东：表内每月都印尖峰/深谷价，但只在政策规定季节执行（规则已体现），其他月份的印出价不参与计算。",
+    shanghai: "上海：另有周末（休息日）、节假日规则。上海单一制按两段制（峰6-22、谷22-6，沪发改价管〔2022〕50号 注2），不计特殊日。",
+    yunnan: "云南：2026-03 起不满100千伏安单一制用户执行平段价，不分时；表内未拆分容量，计算仍按分时。",
+    guizhou: "贵州：单一制无分时价（官方只给两部制分时价），单一制行无法计算。",
+    guangxi: "广西：暂无已确认的现行分时规则，无法计算。"
+  };
+  GD.forEach(function (k) { DTNOTE[k] = "广东各区/深圳/深汕：7–9 月全月有尖峰；其他月份仅在广州预报最高气温 ≥35℃ 的高温日执行，故表内每月都印尖峰价。高温日不可预测，不参与日历加权。"; });
+  DTNOTE.sichuan += " 高温尖峰不可预测，不参与日历加权。";
+  ["zhejiang", "jiangxi", "shanxi"].forEach(function (k) { DTNOTE[k] = B.regions[k] ? B.regions[k].name + "：另有节假日深谷规则。" : ""; });
+  if (DTNOTE.zhejiang) DTNOTE.zhejiang += " 2026-10 按 112号 仅国庆前 3 天计。";
+  ["jiangsu", "hubei"].forEach(function (k) { DTNOTE[k] = (B.regions[k] ? B.regions[k].name : k) + "：节假日深谷官方价表未印价，不计入（按普通日）。"; });
+  DTNOTE.anhui += " 1 月元旦 3 天按节假日规则计，其余 28 天尖峰日。";
+  /* 特殊日天数（月: {日类型: 天数}），节假日依国办发明电〔2025〕7号；未列月份为 0 */
+  var SPECIAL = {
+    anhui: { "2025-12": { sharp: 17 }, "2026-01": { sharp: 28, holiday: 3 }, "2026-02": { holiday: 9 }, "2026-04": { holiday: 3 }, "2026-05": { holiday: 5 }, "2026-06": { holiday: 3 }, "2026-07": { sharp: 17 }, "2026-08": { sharp: 31 }, "2026-09": { holiday: 3 }, "2026-10": { holiday: 7 } },
+    shanghai: { "2025-11": { weekend: 10 }, "2026-01": { holiday: 3 }, "2026-02": { holiday: 12 }, "2026-03": { weekend: 9 }, "2026-04": { holiday: 9 }, "2026-05": { holiday: 12 }, "2026-06": { holiday: 9 }, "2026-09": { holiday: 8 }, "2026-10": { holiday: 13 } },
+    zhejiang: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 3 } },
+    jiangxi: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    shanxi: { "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    jiangsu: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    hubei: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } }
+  };
+  var SPK = ["sharp", "holiday", "weekend"], SPL = { sharp: "尖峰日", holiday: "节假日", weekend: "休息日", normal: "普通日" };
+  var SPNEED = { sharp: "sharp", holiday: "deep_valley", weekend: "deep_valley" };
+  var SH1 = { day_type: "normal", src: "沪发改价管〔2022〕50号 注2", segments: [["00:00", "06:00", "valley"], ["06:00", "22:00", "peak"], ["22:00", "24:00", "valley"]] };
+  var SH1NOTE = "上海单一制按两段制（峰6-22、谷22-6）";
+  var GZ1WHY = "贵州单一制无分时价（官方只给两部制分时价）";
+  function dim(ym) { return new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate(); }
+  var MONTHS = [];
+  for (var i = 0; i < 12; i++) MONTHS.push(new Date(Date.UTC(2025, 10 + i, 1)).toISOString().slice(0, 7));
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+  var mins = function (s) { var p = String(s).split(":"); return +p[0] * 60 + +(p[1] || 0); };
+  var hm = function (m) { return pad(Math.floor(m / 60)) + ":" + pad(m % 60); };
+  var f6 = function (v) { return v == null || isNaN(v) ? "—" : v.toFixed(6); };
+  var fp = function (v) { return v == null ? "—" : String(v); };
+  var fh = function (h) { return String(Math.round(h * 100) / 100); };
+  var rank = function (v) { return v == null ? 99 : v; };
+  var td = function (label, html, cls) { return '<td data-label="' + esc(label) + '"' + (cls ? ' class="' + cls + '"' : "") + ">" + html + "</td>"; };
+
+  function prep(code) {
+    var r = B.regions[code];
+    if (r._p) return r;
+    r._p = 1; r.idx = {}; r.code = code;
+    r.rows = r.rows || []; r.tou = r.tou || [];
+    r.rows.forEach(function (w) { r.idx[w[0] + "|" + w[1] + "|" + w[2] + "|" + w[3]] = w; });
+    r.normal = r.tou.filter(function (t) { return t.day_type === "normal" && t.segments && t.segments.length; });
+    r.special = r.tou.filter(function (t) { return t.day_type !== "normal"; });
+    r.byDt = {};
+    r.tou.forEach(function (t) { if (t.segments && t.segments.length) (r.byDt[t.day_type] = r.byDt[t.day_type] || []).push(t); });
+    r.dts = Object.keys(r.byDt).sort(function (a, b) { var x = DTO.indexOf(a), y = DTO.indexOf(b); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y) || a.localeCompare(b); });
+    r.latest = r.rows.reduce(function (a, w) { return w[0] > a ? w[0] : a; }, "");
+    return r;
+  }
+  /* rule for a month and day type (default normal): month listed, effective_from <= 1st of month, latest effective_from wins */
+  function ruleFor(r, ym, dt) {
+    var d = ym + "-01", m = +ym.slice(5, 7), best = null;
+    (dt && dt !== "normal" ? r.byDt[dt] || [] : r.normal).forEach(function (t) {
+      if ((t.months || []).map(Number).indexOf(m) < 0) return;
+      if (t.effective_from && t.effective_from > d) return;
+      if (t.effective_to && t.effective_to < d) return;
+      if (!best || (t.effective_from || "") > (best.effective_from || "")) best = t;
+    });
+    return best;
+  }
+  /* rule segments as [a, b, type] in minutes, split at midnight, sorted */
+  function segPieces(rule) {
+    if (rule._pc) return rule._pc;
+    var out = [];
+    rule.segments.forEach(function (g) {
+      var a = mins(g[0]), b = mins(g[1]);
+      if (isNaN(a) || isNaN(b)) return;
+      a = ((a % 1440) + 1440) % 1440;
+      if (b <= a) b += 1440;
+      if (b > 1440) { out.push([a, 1440, g[2]]); out.push([0, b - 1440, g[2]]); }
+      else out.push([a, b, g[2]]);
+    });
+    out.sort(function (x, y) { return x[0] - y[0]; });
+    return (rule._pc = out);
+  }
+  /* window: start == end → full day; end < start → crosses midnight */
+  function makeWin(s, e) {
+    var iv = s === e ? [[0, 1440]] : s < e ? [[s, e]] : [[s, 1440], [0, e]];
+    iv = iv.filter(function (w) { return w[1] > w[0]; });
+    var len = iv.reduce(function (a, w) { return a + w[1] - w[0]; }, 0) / 60;
+    return { s: s, e: e, iv: iv, len: len, sTxt: hm(s), eTxt: s === e || e === 0 ? "24:00" : hm(e),
+      desc: iv.map(function (w) { return hm(w[0]) + "–" + hm(w[1]); }).join(" + ") };
+  }
+  var FULL = makeWin(0, 0);
+  function isSh1(r, c) { return r.code === "shanghai" && c.tt === "单一制"; }
+  /* 实际日历加权：月值 = Σ(各日类型天数 × 该日类型窗口值) ÷ 当月天数；特殊日只在该行印出对应价时计入，否则按普通日 */
+  function wtCalc(r, c, m, W) {
+    var D = dim(m), sp = (SPECIAL[r.code] || {})[m] || {}, row = r.idx[m + "|" + c.cat + "|" + c.tt + "|" + c.volt];
+    var nx = winRule(r, c, m, W, ruleFor(r, m)), parts = [], left = D, skip = [];
+    nx.dt = "normal";
+    SPK.forEach(function (k) {
+      var n = sp[k];
+      if (!n || !row) return;
+      var need = SPNEED[k];
+      if (!row || row[FI[need]] == null) { skip.push(SPL[k] + n + "天官方未印" + SEGN[need] + "价，按普通日"); return; }
+      var rule = ruleFor(r, m, k);
+      if (!rule) { skip.push(SPL[k] + n + "天该月无规则，按普通日"); return; }
+      var x = winRule(r, c, m, W, rule);
+      x.dt = k; parts.push({ k: k, n: n, x: x }); left -= n;
+    });
+    parts.push({ k: "normal", n: left, x: nx });
+    var note = parts.filter(function (p) { return p.k !== "normal"; }).map(function (p) { return SPL[p.k] + p.n; }).concat("普通日" + left).join("/") + " (共" + D + ")" + (skip.length ? "；" + skip.join("；") : "");
+    var bad = parts.filter(function (p) { return p.n > 0 && !p.x.ok; })[0];
+    if (bad) { bad.x.note = note; return bad.x; }
+    if (parts.length === 1) { nx.note = note; return nx; }
+    var use = parts.filter(function (p) { return p.n > 0; }), hrs = {}, val = 0;
+    use.forEach(function (p) { val += p.n * p.x.val / D; });
+    ORDER.forEach(function (k) { var h = use.reduce(function (a, p) { return a + p.n * (p.x.hrs[k] || 0); }, 0) / D; if (h) hrs[k] = h; });
+    return { ok: true, val: val, sum: val * W.len, rule: nx.rule || parts[0].x.rule, row: row, sub: use.some(function (p) { return p.x.sub; }), items: use[0].x.items, hrs: hrs, dt: "mix", note: note,
+      wt: { D: D, parts: use } };
+  }
+  /* opt = { dt: day type, wt: calendar weighting }; chosen day type without a rule that month falls back to normal */
+  function winCalc(r, c, m, W, opt) {
+    var dt = (opt && opt.dt) || "normal";
+    if (isSh1(r, c)) { var s1 = winRule(r, c, m, W, SH1); s1.dt = "normal"; s1.note = SH1NOTE; return s1; }
+    if (r.code === "guizhou" && c.tt === "单一制") return { ok: false, why: GZ1WHY, dt: "normal" };
+    if (opt && opt.wt && SPECIAL[r.code]) return wtCalc(r, c, m, W);
+    var rule = ruleFor(r, m, dt), fb = false;
+    if (!rule && dt !== "normal") { rule = ruleFor(r, m); fb = true; }
+    var x = winRule(r, c, m, W, rule);
+    x.dt = fb ? "normal" : dt;
+    if (fb) x.note = "该月无此日类型，按普通日";
+    return x;
+  }
+  function winRule(r, c, m, W, rule) {
+    if (!rule) return { ok: false, why: "无分时规则" };
+    var row = r.idx[m + "|" + c.cat + "|" + c.tt + "|" + c.volt];
+    if (!row) return { ok: false, why: "无当月价格", rule: rule };
+    var sum = 0, cov = 0, sub = false, items = [], hrs = {}, bad = "";
+    W.iv.forEach(function (w) {
+      segPieces(rule).forEach(function (g) {
+        if (bad) return;
+        var a = Math.max(w[0], g[0]), b = Math.min(w[1], g[1]);
+        if (b <= a) return;
+        var h = (b - a) / 60, p = row[FI[g[2]]], used = g[2];
+        if (p == null) {
+          if (g[2] === "sharp") { p = row[FI.peak]; used = "peak"; }
+          else if (g[2] === "deep_valley") { p = row[FI.valley]; used = "valley"; }
+          if (p != null) sub = true;
+        }
+        if (p == null) { bad = (SEGN[g[2]] || g[2]) + "价缺失"; return; }
+        sum += h * p; cov += h;
+        hrs[g[2]] = (hrs[g[2]] || 0) + h;
+        items.push({ a: a, b: b, t: g[2], h: h, p: p, used: used });
+      });
+    });
+    if (bad) return { ok: false, why: bad, rule: rule, row: row };
+    if (cov < W.len - 1e-9) return { ok: false, why: "分时规则未覆盖窗口", rule: rule, row: row };
+    return { ok: true, val: sum / W.len, sum: sum, rule: rule, row: row, sub: sub, items: items, hrs: hrs };
+  }
+  function avg(list, key) {
+    var got = list.filter(function (o) { return o[key] && o[key].ok; });
+    return { v: got.length ? got.reduce(function (a, o) { return a + o[key].val; }, 0) / got.length : null, n: got.length };
+  }
+  /* 12 monthly values for a window; withFull adds the 00–24 reference */
+  function monthly(r, c, W, withFull, opt) {
+    var ms = MONTHS.map(function (m) { var o = { m: m, w: winCalc(r, c, m, W, opt) }; if (withFull) o.f = winCalc(r, c, m, FULL, opt); return o; });
+    var a = avg(ms, "w");
+    ms.annual = a.v; ms.count = a.n;
+    if (withFull) { var b = avg(ms, "f"); ms.fAnnual = b.v; ms.fCount = b.n; }
+    ms.latest = null;
+    for (var k = ms.length - 1; k >= 0; k--) if (ms[k].w.ok) { ms.latest = ms[k]; break; }
+    return ms;
+  }
+  var cnt = function (v, n) { return v != null && n < 12 ? "（" + n + "/12 个月）" : ""; };
+  function annualTxt(ms) { return f6(ms.annual) + cnt(ms.annual, ms.count); }
+
+  /* ---------- inputs ---------- */
+  var regSel = $("region"), comboSel = $("combo"), voltSel = $("volt"), sIn = $("start"), eIn = $("end");
+  var combos = [];
+  (function fillRegions() {
+    var groups = [["sgcc", "国网"], ["csg", "南方电网"], ["other", "内蒙古电力"]], html = "";
+    groups.forEach(function (g) {
+      var codes = Object.keys(B.regions).filter(function (k) { var x = B.regions[k].grid; return g[0] === "other" ? x !== "sgcc" && x !== "csg" : x === g[0]; });
+      codes.sort(function (a, b) { return String(B.regions[a].name).localeCompare(String(B.regions[b].name), "zh"); });
+      if (codes.length) html += '<optgroup label="' + g[1] + '">' + codes.map(function (k) { return '<option value="' + esc(k) + '">' + esc(B.regions[k].name) + "</option>"; }).join("") + "</optgroup>";
+    });
+    regSel.innerHTML = html;
+    regSel.value = B.regions.zhejiang ? "zhejiang" : regSel.options[0] && regSel.options[0].value;
+  })();
+  function fillCombos() {
+    var r = prep(regSel.value), seen = {}, prev = comboSel.value && combos[+comboSel.value];
+    combos = [];
+    var add = function (w, old) { var k = w[1] + "|" + w[2]; if (!seen[k]) { seen[k] = 1; combos.push({ cat: w[1], tt: w[2], old: old }); } };
+    r.rows.forEach(function (w) { if (w[0] === r.latest) add(w, false); });
+    r.rows.forEach(function (w) { add(w, true); });
+    comboSel.innerHTML = combos.length ? combos.map(function (c, i) { return '<option value="' + i + '">' + esc(c.cat + " · " + c.tt) + (c.old ? "（仅历史月份）" : "") + "</option>"; }).join("") : '<option value="">（无数据）</option>';
+    var keep = prev ? combos.findIndex(function (c) { return c.cat === prev.cat && c.tt === prev.tt; }) : -1;
+    comboSel.value = String(keep >= 0 ? keep : 0);
+    fillVolts();
+  }
+  function voltsOf(r, c) {
+    var map = {};
+    r.rows.forEach(function (w) { if (w[1] === c.cat && w[2] === c.tt) map[w[3]] = Math.min(map[w[3]] == null ? 99 : map[w[3]], rank(w[4])); });
+    return Object.keys(map).sort(function (a, b) { return map[a] - map[b] || a.localeCompare(b, "zh"); });
+  }
+  function fillVolts() {
+    var r = prep(regSel.value), c = combos[+comboSel.value], prev = voltSel.value;
+    var vs = c ? voltsOf(r, c) : [];
+    voltSel.innerHTML = vs.length ? vs.map(function (v) { return '<option value="' + esc(v) + '">' + esc(v) + "</option>"; }).join("") : '<option value="">（无数据）</option>';
+    if (vs.indexOf(prev) >= 0) voltSel.value = prev;
+    else { var ten = vs.find(function (v) { return /1\s*[-~～]\s*10/.test(v); }); voltSel.value = ten || vs[0] || ""; }
+  }
+  document.querySelectorAll("[data-w]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var p = b.getAttribute("data-w").split("|");
+      sIn.value = p[0]; eIn.value = p[1];
+      render();
+    });
+  });
+  var dtSel = $("dt"), wtChk = $("wt"), lastReg = null;
+  function fillDt() {
+    var r = prep(regSel.value), prev = dtSel.value || "normal", ds = r.dts.slice();
+    if (ds.indexOf("normal") < 0) ds.unshift("normal");
+    dtSel.innerHTML = ds.map(function (k) { return '<option value="' + esc(k) + '">' + esc(dtl(k)) + "</option>"; }).join("");
+    dtSel.value = ds.indexOf(prev) >= 0 ? prev : "normal";
+    var show = ds.length > 1;
+    $("dtBox").hidden = !show;
+    $("form").classList.toggle("x-form--dt", show);
+    var hasSp = !!SPECIAL[regSel.value];
+    $("wtBox").hidden = !hasSp;
+    /* tick calendar weighting by default each time a region with a special-day table is selected; the user can still untick it */
+    if (hasSp && lastReg !== regSel.value) wtChk.checked = true;
+    lastReg = regSel.value;
+    syncDt();
+    var note = DTNOTE[regSel.value] || "";
+    if (hasSp) note += " 勾选「按实际日历加权（特殊日按天数计入）」：月值 = Σ(各日类型天数 × 该日类型窗口值) ÷ 当月天数，其余为普通日；特殊日仅在该行印出尖峰/深谷价时计入，否则按普通日。";
+    $("dtNote").textContent = note.trim();
+    $("dtNote").hidden = !note;
+  }
+  function wtOn() { return !!SPECIAL[regSel.value] && wtChk.checked; }
+  function syncDt() { dtSel.disabled = wtOn(); }
+  function curDt() { return $("dtBox").hidden || wtOn() ? "normal" : dtSel.value || "normal"; }
+  function curOpt() { return { dt: curDt(), wt: wtOn() }; }
+  /* day type for any region: the selected one where the region has it, else normal; weighting for regions with a special-day table unless unticked here */
+  function optFor(code) {
+    var r = prep(code), dt = curDt(), wt = !!SPECIAL[code] && (SPECIAL[regSel.value] ? wtChk.checked : true);
+    return { dt: !wt && r.byDt[dt] ? dt : "normal", wt: wt };
+  }
+  dtSel.addEventListener("change", render);
+  wtChk.addEventListener("change", function () { syncDt(); render(); });
+  regSel.addEventListener("change", function () { fillCombos(); fillDt(); render(); });
+  comboSel.addEventListener("change", function () { fillVolts(); render(); });
+  voltSel.addEventListener("change", render);
+  sIn.addEventListener("change", render);
+  eIn.addEventListener("change", render);
+  var selM = null;
+  $("sm").innerHTML = $("pm").innerHTML = MONTHS.map(function (m) { return '<option value="' + m + '">' + m + "</option>"; }).join("");
+  function pickMonth(v) {
+    if (MONTHS.indexOf(v) < 0) return;
+    selM = v; $("sm").value = v; $("pm").value = v;
+    if (state) { renderTable(); renderStrip(); renderProc(); }
+    if (window.__wbSetMonth) window.__wbSetMonth(v);
+  }
+  $("sm").addEventListener("change", function () { pickMonth($("sm").value); });
+  $("pm").addEventListener("change", function () { pickMonth($("pm").value); });
+
+  /* ---------- render ---------- */
+  var state = null;
+  function parseT(v) {
+    if (!/^\d{1,2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(v || "")) return null;
+    var m = mins(v);
+    return m >= 0 && m < 1440 ? m : null;
+  }
+  function getWin() {
+    var s = parseT(sIn.value), e = parseT(eIn.value);
+    if (s == null || e == null) return { err: "请选择完整的开始和结束时刻。" };
+    if (s % 15 || e % 15) return { err: "时刻须为 15 分钟的整数倍（如 08:00、08:15）。" };
+    return makeWin(s, e);
+  }
+  function curM() { return selM || (state && state.ms.latest ? state.ms.latest.m : MONTHS[11]); }
+  function render() {
+    var W = getWin(), code = regSel.value, r = prep(code), c0 = combos[+comboSel.value];
+    $("winInfo").innerHTML = W.err ? "" : "窗口 <b>" + esc(W.desc) + "</b> · 共 <b>" + fh(W.len) + " 小时</b>";
+    var err = W.err || "";
+    if (!err && !r.rows.length) err = "<strong>" + esc(r.name) + "暂无代理购电价格数据，无法计算。</strong>";
+    if (!err && !r.normal.length) err = "<strong>该区域暂无已确认的现行分时规则，无法计算。</strong>";
+    if (!err && (!c0 || !voltSel.value)) err = "该区域没有可选的分类或电压等级。";
+    if (!err && code === "guizhou" && c0.tt === "单一制") err = "<strong>" + GZ1WHY + "，单一制行无法计算。</strong>请在「分类·计价」选择两部制。";
+    renderNotes(r);
+    if (err) {
+      fail(err);
+      $("notesDet").hidden = !(r.notes && r.notes.length);
+      state = null;
+      if ($("natDet").open) renderNation();
+      return;
+    }
+    $("msg").hidden = true;
+    document.querySelectorAll(".x-dep").forEach(function (n) { n.hidden = false; });
+    var c = { cat: c0.cat, tt: c0.tt, volt: voltSel.value };
+    var opt = curOpt();
+    state = { r: r, c: c, W: W, opt: opt, ms: monthly(r, c, W, true, opt) };
+    $("sm").value = $("pm").value = curM();
+    renderStats(); renderFlags(); renderTable(); renderStrip(); renderChart(); renderProc(); renderVolts(); renderCsv();
+    if ($("natDet").open) renderNation();
+  }
+  function renderNotes(r) {
+    $("notes").innerHTML = (r.notes || []).map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("");
+    $("notesDet").hidden = !(r.notes && r.notes.length);
+  }
+  function stat(fig, label) { return '<div class="x-kpi"><span>' + label + "</span><b>" + fig + "</b></div>"; }
+  function hiLo(ms) {
+    var hi = null, lo = null;
+    ms.forEach(function (o) { if (!o.w.ok) return; if (!hi || o.w.val > hi.w.val) hi = o; if (!lo || o.w.val < lo.w.val) lo = o; });
+    return { hi: hi, lo: lo };
+  }
+  function renderStats() {
+    var st = state, ms = st.ms, L = ms.latest, x = hiLo(ms);
+    $("stats").innerHTML =
+      stat(L ? f6(L.w.val) : "—", "最新月份窗口综合电价 · " + (L ? L.m : "无数据") + " · 元/kWh") +
+      stat(f6(ms.annual), "年度综合电价（近12个月均值）" + cnt(ms.annual, ms.count)) +
+      stat(x.hi ? x.hi.w.val.toFixed(6) : "—", "12 个月中最高" + (x.hi ? " · " + x.hi.m : "")) +
+      stat(x.lo ? x.lo.w.val.toFixed(6) : "—", "12 个月中最低" + (x.lo ? " · " + x.lo.m : "")) +
+      stat(fh(st.W.len) + " h", "窗口时长 · " + st.W.sTxt + "–" + st.W.eTxt);
+  }
+  function specialText(r, cur) {
+    var seen = {}, out = [];
+    r.special.forEach(function (t) {
+      if (t.day_type === cur || (cur === "mix" && SPK.indexOf(t.day_type) >= 0)) return;
+      var x = dtl(t.day_type) + "（" + (t.months || []).join("、") + "月，" + (t.effective_from ? t.effective_from + " 起" : "生效日未注明") + (t.effective_to ? "，至 " + t.effective_to : "") + "）";
+      if (!seen[x]) { seen[x] = 1; out.push(x); }
+    });
+    return out;
+  }
+  function renderFlags() {
+    var st = state, f = [];
+    var subM = st.ms.filter(function (o) { return o.w.ok && o.w.sub; }).map(function (o) { return o.m; });
+    if (subM.length) f.push("<b>尖峰/深谷未单列，按高峰/低谷价计：</b>" + esc(subM.join("、")));
+    var miss = st.ms.filter(function (o) { return !o.w.ok; });
+    if (miss.length) f.push("<b>缺数据 " + miss.length + " 个月，年度值仅含 " + st.ms.count + "/12 个月：</b>" + esc(miss.map(function (o) { return o.m + "（" + o.w.why + "）"; }).join("、")));
+    var fbM = st.ms.filter(function (o) { return o.w.note === "该月无此日类型，按普通日"; }).map(function (o) { return o.m; });
+    if (fbM.length) f.push("<b>" + esc(dtl(st.opt.dt)) + "在以下月份无规则，按普通日计：</b>" + esc(fbM.join("、")));
+    var sh1 = isSh1(st.r, st.c);
+    if (sh1) f.push("<b>" + SH1NOTE + "：</b>沪发改价管〔2022〕50号 注2，一般工商业单一制分时用户只分高峰、低谷；不计尖峰、周末/节假日深谷。");
+    else if (st.opt.wt) f.push("<b>按实际日历加权（特殊日按天数计入）：</b>月值 = Σ(各日类型天数 × 该日类型窗口值) ÷ 当月天数，其余为普通日；节假日依国办发明电〔2025〕7号；特殊日仅在该行印出尖峰/深谷价时计入，否则按普通日（不推算缺失价）。各月天数见「状态/备注」。" + (st.r.code === "anhui" ? "安徽尖峰执行期 7/15–8/31、12/15–1/31（皖发改价格〔2025〕302号）；1 月元旦 3 天按节假日规则计，其余 28 天尖峰日。" : ""));
+    var sp = sh1 ? [] : specialText(st.r, st.opt.wt ? "mix" : st.opt.dt);
+    if (sp.length) f.push("<b>其他日类型规则未计入（可在「日类型」切换）：</b>" + esc(sp.join("；")));
+    $("flags").innerHTML = f.map(function (x) { return "<li>" + x + "</li>"; }).join("");
+    $("flagBox").hidden = !f.length;
+  }
+  function hoursTxt(h) {
+    if (!h) return "—";
+    return ORDER.filter(function (k) { return h[k]; }).map(function (k) { return SEGS[k] + fh(h[k]); }).join(" ") || "—";
+  }
+  function monthRow(r, c, m) { return r.idx[m + "|" + c.cat + "|" + c.tt + "|" + c.volt]; }
+  function status(x) {
+    var note = x.note ? "<small>" + esc(x.note) + "</small>" : "";
+    if (!x.ok) return '<span class="chip">缺数据</span><small>' + esc(x.why) + "</small>" + note;
+    return (x.sub ? "未单列<small>尖峰按高峰、深谷按低谷价</small>" : "正常") + note;
+  }
+  function dtTxt(x) { return x.dt === "mix" ? x.wt.parts.map(function (p) { return SPL[p.k]; }).join(" + ") + "（日历加权）" : dtl(x.dt || "normal"); }
+  function statusTxt(x) {
+    var s = !x.ok ? "缺数据（" + x.why + "）" : x.sub ? "未单列（尖峰按高峰、深谷按低谷价）" : "正常";
+    return s;
+  }
+  function effTxt(rule) { return rule ? (rule.src ? rule.src : rule.effective_from ? rule.effective_from + " 起" : "生效日未注明") : "—"; }
+  function renderTable() {
+    var st = state, html = "", cm = curM(), E = '<td class="is-empty"></td>';
+    st.ms.forEach(function (o) {
+      var w = monthRow(st.r, st.c, o.m);
+      html += "<tr" + (o.m === cm ? ' class="is-highlight"' : "") + '><th scope="row" class="rowhead">' + o.m + "</th>" +
+        td("窗口内时段小时数", o.w.ok ? esc(hoursTxt(o.w.hrs)) : '<span class="muted">—</span>') +
+        ORDER.map(function (k) { return td(SEGN[k], fp(w ? w[FI[k]] : null), w && w[FI[k]] != null ? "" : "muted"); }).join("") +
+        td("窗口综合电价", o.w.ok ? f6(o.w.val) : "—", "num") +
+        td("全天综合电价", o.f.ok ? f6(o.f.val) : "—") +
+        td("日类型", esc(dtTxt(o.w))) +
+        td("状态/备注", status(o.w)) + "</tr>";
+    });
+    html += '<tr class="x-total"><th scope="row">年度均值</th>' + td("说明", "近 12 个月月度值算术平均", "muted") +
+      E + E + E + E + E +
+      td("窗口综合电价", annualTxt(st.ms), "num") +
+      td("全天综合电价", f6(st.ms.fAnnual) + cnt(st.ms.fAnnual, st.ms.fCount)) + E + E + "</tr>";
+    $("mBody").innerHTML = html;
+  }
+  function renderStrip() {
+    var st = state, m = curM(), o = st.ms[MONTHS.indexOf(m)], W = st.W;
+    var rule = (o && o.w.rule) || ruleFor(st.r, m);
+    var dtS = o ? (o.w.dt === "mix" ? "普通日规则（日历加权 " + o.w.note + "）" : dtl(o.w.dt || "normal") + (o.w.note ? "（" + o.w.note + "）" : "")) : "";
+    $("stripSub").textContent = rule ? dtS + " · 分时政策 " + effTxt(rule) + " · 窗口 " + W.desc + "（" + fh(W.len) + " 小时）" : "";
+    if (!rule || !segPieces(rule).length) { $("strip").innerHTML = '<p class="fineprint">' + m + " 无分时规则，无法绘制 24 小时分时条。</p>"; return; }
+    var P = function (x) { return (x / 1440 * 100).toFixed(3) + "%"; }, pcs = segPieces(rule), seen = {};
+    var html = pcs.map(function (g) {
+      seen[g[2]] = 1;
+      return '<div class="x-seg" style="left:' + P(g[0]) + ";width:" + P(g[1] - g[0]) + ";background:" + (SEGC[g[2]] || "var(--chart-muted)") + '" title="' + hm(g[0]) + "–" + hm(g[1]) + " " + esc(SEGN[g[2]] || g[2]) + '">' + (g[1] - g[0] >= 90 ? esc(SEGS[g[2]] || "") : "") + "</div>";
+    }).join("");
+    var iv = W.iv.slice().sort(function (a, b) { return a[0] - b[0]; }), cur = 0;
+    iv.forEach(function (w) { if (w[0] > cur) html += '<div class="x-veil" style="left:' + P(cur) + ";width:" + P(w[0] - cur) + '"></div>'; cur = w[1]; });
+    if (cur < 1440) html += '<div class="x-veil" style="left:' + P(cur) + ";width:" + P(1440 - cur) + '"></div>';
+    iv.forEach(function (w) { html += '<div class="x-bracket" style="left:' + P(w[0]) + ";width:" + P(w[1] - w[0]) + '"></div>'; });
+    var label = m + " 分时：" + pcs.map(function (g) { return hm(g[0]) + "–" + hm(g[1]) + " " + (SEGN[g[2]] || g[2]); }).join("，") + "；窗口 " + W.desc;
+    var ticks = [0, 3, 6, 9, 12, 15, 18, 21, 24].map(function (h) { return '<span style="left:' + (h / 24 * 100) + '%">' + pad(h) + ":00</span>"; }).join("");
+    var leg = ORDER.filter(function (k) { return seen[k]; }).map(function (k) { return '<span><i style="background:' + SEGC[k] + '"></i>' + SEGN[k] + "</span>"; }).join("") + '<span><i class="x-bk"></i>时间窗</span>';
+    $("strip").innerHTML = '<div class="x-strip" role="img" aria-label="' + esc(label) + '">' + html + '</div><div class="x-ticks" aria-hidden="true">' + ticks + '</div><div class="x-legend">' + leg + "</div>";
+  }
+  var chart = null;
+  function renderChart() {
+    var st = state, W = st.W, x = hiLo(st.ms);
+    var wv = st.ms.map(function (o) { return o.w.ok ? +o.w.val.toFixed(6) : null; });
+    var fv = st.ms.map(function (o) { return o.f.ok ? +o.f.val.toFixed(6) : null; });
+    var sm = "<small>2025-11 至 2026-10，元/kWh；窗口 " + esc(W.desc) + "，对照全天 00:00–24:00</small>";
+    if (x.hi) {
+      $("chartCap").innerHTML = "窗口综合电价在 " + x.lo.w.val.toFixed(4) + "（" + x.lo.m + "）到 " + x.hi.w.val.toFixed(4) + "（" + x.hi.m + "）之间" + sm;
+      $("chart").setAttribute("aria-label", "窗口综合电价最低 " + x.lo.m + " " + x.lo.w.val.toFixed(4) + "，最高 " + x.hi.m + " " + x.hi.w.val.toFixed(4) + " 元/kWh");
+    } else {
+      $("chartCap").innerHTML = "12 个月均缺数据，无法绘制" + sm;
+      $("chart").setAttribute("aria-label", "没有可绘制的数据");
+    }
+    if (typeof Chart === "undefined") return;
+    if (chart) chart.destroy();
+    chart = new Chart($("chart"), {
+      type: "line",
+      data: { labels: MONTHS, datasets: [
+        { label: "窗口综合电价 " + W.sTxt + "–" + W.eTxt, data: wv, pointRadius: 3 },
+        { label: "全天综合电价", data: fv, pointRadius: 3 }
+      ] },
+      options: {
+        scales: { y: { ticks: { callback: function (v) { return Number(v).toFixed(3); } } } },
+        plugins: { tooltip: { callbacks: { label: function (ctx) { return ctx.dataset.label + " " + (ctx.raw == null ? "—" : Number(ctx.raw).toFixed(6)) + " 元/kWh"; } } } }
+      }
+    });
+  }
+  function renderProc() {
+    var st = state, m = curM(), o = st.ms[MONTHS.indexOf(m)], x = o.w, W = st.W;
+    if (!x.ok) {
+      $("procSub").textContent = m + " · 窗口 " + W.desc;
+      $("proc").innerHTML = '<p class="fineprint">' + m + " 缺数据，无法展示计算过程：" + esc(x.why) + "。</p>";
+      return;
+    }
+    $("procSub").textContent = m + " · " + dtTxt(x) + (x.note ? "（" + x.note + "）" : "") + " · 分时政策 " + effTxt(x.rule) + " · 窗口 " + W.desc;
+    var itemRows = function (y, pre) {
+      return y.items.map(function (it) {
+        var note = it.used !== it.t ? "（" + SEGN[it.t] + "未单列，按" + SEGN[it.used] + "价）" : "";
+        return '<div class="row"><dt>' + pre + hm(it.a) + "–" + hm(it.b) + " " + esc(SEGN[it.t] || it.t) + "<small>" + fh(it.h) + "h × " + it.p + " 元/kWh" + note + "</small></dt><dd>= " + (it.h * it.p).toFixed(6) + "</dd></div>";
+      }).join("");
+    };
+    var rows;
+    if (x.wt) {
+      var g = x.wt, line = function (y, lab) { return '<div class="row"><dt>' + lab + " 窗口综合电价<small>Σ " + y.sum.toFixed(6) + " ÷ " + fh(W.len) + "h</small></dt><dd>" + y.val.toFixed(6) + "</dd></div>"; };
+      rows = g.parts.map(function (p) { return itemRows(p.x, SPL[p.k] + " ") + line(p.x, SPL[p.k]); }).join("");
+      rows += '<div class="row"><dt>日历加权<small>（' + g.parts.map(function (p) { return p.n + " × " + p.x.val.toFixed(6); }).join(" + ") + "）÷ " + g.D + " 天</small></dt><dd>" + esc(x.note) + "</dd></div>";
+      rows += '<div class="row row--total"><dt>= 当月窗口综合电价（元/kWh）</dt><dd>' + x.val.toFixed(6) + "</dd></div>";
+    } else {
+      rows = itemRows(x, "");
+      rows += '<div class="row"><dt>Σ 时长 × 电价<small>合计 ' + fh(W.len) + " 小时</small></dt><dd>" + x.sum.toFixed(6) + "</dd></div>";
+      rows += '<div class="row row--total"><dt>÷ 窗口时长 ' + fh(W.len) + "h = 窗口综合电价（元/kWh）</dt><dd>" + x.val.toFixed(6) + "</dd></div>";
+    }
+    var fine = "同月全天综合电价（00:00–24:00）" + (o.f.ok ? o.f.val.toFixed(6) : "—") + " 元/kWh，供对照。";
+    $("proc").innerHTML = "<dl>" + rows + '</dl><p class="fineprint">' + fine + "</p>";
+  }
+  function renderVolts() {
+    var st = state, vs = voltsOf(st.r, st.c), html = "";
+    $("voltSub").textContent = st.r.name + " · " + st.c.cat + " · " + st.c.tt + " · " + (isSh1(st.r, st.c) ? SH1NOTE : st.opt.wt ? "按实际日历加权" : dtl(st.opt.dt));
+    vs.forEach(function (v) {
+      var c = { cat: st.c.cat, tt: st.c.tt, volt: v }, ms = monthly(st.r, c, st.W, false, st.opt), L = ms.latest, cur = v === st.c.volt;
+      html += "<tr" + (cur ? ' class="is-highlight"' : "") + '><th scope="row">' + esc(v) + (cur ? '<span class="dot">当前</span>' : "") + "</th>" +
+        td("最新月窗口综合电价", L ? f6(L.w.val) + "<small>" + L.m + "</small>" : '<span class="muted">缺数据</span>', "num") + td("年度综合电价", annualTxt(ms), "num") + "</tr>";
+    });
+    $("vBody").innerHTML = html;
+  }
+
+  /* ---------- national ---------- */
+  var sortK = "latest", sortD = "desc";
+  function rep(r) {
+    var rows = r.rows.filter(function (w) { return w[0] === r.latest; });
+    if (!rows.length) return null;
+    var re = /1\s*[-~～]\s*10|(^|[^\d.])10\s*千伏/, c = rows.filter(function (w) { return re.test(w[3]); });
+    if (!c.length) { var mr = Math.min.apply(null, rows.map(function (w) { return rank(w[4]); })); c = rows.filter(function (w) { return rank(w[4]) === mr; }); }
+    var w = c.find(function (w) { return w[2] === "单一制"; }) || c[0];
+    return { cat: w[1], tt: w[2], volt: w[3] };
+  }
+  function renderNation() {
+    var W = getWin();
+    if (W.err) { $("nBody").innerHTML = '<tr><td class="x-err" colspan="5">' + W.err + "</td></tr>"; return; }
+    var list = Object.keys(B.regions).map(function (k) {
+      var r = prep(k), c = rep(r), o = { code: k, name: r.name, grid: r.grid, c: c, latest: null, annual: null, why: "" };
+      if (!r.rows.length || !c) o.why = "暂无价格数据";
+      else if (!r.normal.length) o.why = "暂无已确认的现行分时规则";
+      else {
+        var op = optFor(k), ms = monthly(r, c, W, false, op);
+        o.dt = isSh1(r, c) ? "单一制两段制" : op.wt ? "日历加权" : op.dt !== "normal" ? dtl(op.dt) : "";
+        o.annual = ms.annual; o.cnt = ms.count;
+        if (ms.latest) { o.latest = ms.latest.w.val; o.lm = ms.latest.m; }
+        else { var wy = {}; ms.forEach(function (x) { wy[x.w.why] = 1; }); o.why = "12 个月均缺数据：" + Object.keys(wy).join("、"); }
+      }
+      return o;
+    });
+    list.sort(function (a, b) {
+      if (sortK === "name") return (sortD === "asc" ? 1 : -1) * String(a.name).localeCompare(String(b.name), "zh");
+      var x = a[sortK], y = b[sortK];
+      if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+      return sortD === "asc" ? x - y : y - x;
+    });
+    var GN = { sgcc: "国网", csg: "南方电网" }, cur = regSel.value;
+    $("nBody").innerHTML = list.map(function (o) {
+      return "<tr" + (o.code === cur ? ' class="is-highlight"' : "") + '><th scope="row">' + esc(o.name) + "<small>" + (GN[o.grid] || "内蒙古电力") + (o.dt ? " · " + esc(o.dt) : "") + "</small></th>" +
+        td("分类·计价", o.c ? esc(o.c.cat + " · " + o.c.tt) : "—") + td("电压", o.c ? esc(o.c.volt) : "—") +
+        td("最新月窗口综合电价", o.latest != null ? f6(o.latest) + "<small>" + o.lm + "</small>" : '<span class="muted">无法计算</span><small>' + esc(o.why) + "</small>", "num") +
+        td("年度综合电价", o.annual != null ? f6(o.annual) + (o.cnt < 12 ? "<small>" + o.cnt + "/12 个月</small>" : "") : '<span class="muted">—</span>', "num") + "</tr>";
+    }).join("");
+    document.querySelectorAll(".x-sort").forEach(function (b) {
+      var on = b.getAttribute("data-k") === sortK;
+      if (on) b.setAttribute("data-dir", sortD); else b.removeAttribute("data-dir");
+      b.closest("th").setAttribute("aria-sort", on ? (sortD === "asc" ? "ascending" : "descending") : "none");
+    });
+  }
+  $("natDet").addEventListener("toggle", function () { if ($("natDet").open) renderNation(); });
+  document.querySelectorAll(".x-sort").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var k = b.getAttribute("data-k");
+      if (k === sortK) sortD = sortD === "asc" ? "desc" : "asc"; else { sortK = k; sortD = k === "name" ? "asc" : "desc"; }
+      renderNation();
+    });
+  });
+
+  /* ---------- export ---------- */
+  function q(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function renderCsv() {
+    var st = state, L = [];
+    var W = st.W, ms = st.ms, x = hiLo(ms), v6 = function (y) { return y && y.ok ? y.val.toFixed(6) : ""; };
+    L.push(["区域", "分类", "计价", "电压等级", "窗口开始", "窗口结束", "窗口时长(h)", "窗口区间", "日类型", "日历加权"].join(","));
+    L.push([st.r.name, st.c.cat, st.c.tt, st.c.volt, W.sTxt, W.eTxt, fh(W.len), W.desc, isSh1(st.r, st.c) ? SH1NOTE : st.opt.wt ? "按实际日历加权" : dtl(st.opt.dt), isSh1(st.r, st.c) ? "不适用（上海单一制两段制）" : st.opt.wt ? "开（按实际日历加权，特殊日按天数计入）" : SPECIAL[st.r.code] ? "关" : "关（该区域无特殊日表）"].map(q).join(","));
+    L.push("");
+    L.push(["月份", "窗口内尖峰(h)", "窗口内高峰(h)", "窗口内平段(h)", "窗口内低谷(h)", "窗口内深谷(h)", "尖峰", "高峰", "平段", "低谷", "深谷", "窗口综合电价", "全天综合电价", "分时政策起始", "日类型", "状态", "备注"].join(","));
+    ms.forEach(function (o) {
+      var w = monthRow(st.r, st.c, o.m), h = o.w.ok ? o.w.hrs : null;
+      L.push([o.m].concat(ORDER.map(function (k) { return h ? fh(h[k] || 0) : ""; }), ORDER.map(function (k) { return w && w[FI[k]] != null ? w[FI[k]] : ""; }),
+        [v6(o.w), v6(o.f), o.w.rule ? o.w.rule.src || o.w.rule.effective_from || "未注明" : "", dtTxt(o.w), statusTxt(o.w), o.w.note || ""]).map(q).join(","));
+    });
+    L.push(["年度均值", "", "", "", "", "", "", "", "", "", "", ms.annual != null ? ms.annual.toFixed(6) : "", ms.fAnnual != null ? ms.fAnnual.toFixed(6) : "", "", "", ms.count + "/12 个月", ""].map(q).join(","));
+    L.push("");
+    L.push(["汇总", "数值", "说明"].join(","));
+    L.push(["最新月份窗口综合电价", ms.latest ? ms.latest.w.val.toFixed(6) : "", ms.latest ? ms.latest.m : "无数据"].map(q).join(","));
+    L.push(["年度综合电价（近12个月均值）", ms.annual != null ? ms.annual.toFixed(6) : "", ms.count + "/12 个月"].map(q).join(","));
+    L.push(["12 个月中最高", x.hi ? x.hi.w.val.toFixed(6) : "", x.hi ? x.hi.m : ""].map(q).join(","));
+    L.push(["12 个月中最低", x.lo ? x.lo.w.val.toFixed(6) : "", x.lo ? x.lo.m : ""].map(q).join(","));
+    L.push(["窗口时长(h)", fh(W.len), W.sTxt + "–" + W.eTxt].map(q).join(","));
+    $("csv").value = L.join("\n");
+  }
+  $("copyBtn").addEventListener("click", function () {
+    var ta = $("csv"), ok = function () { $("exStatus").textContent = "已复制到剪贴板。"; }, manual = function () { ta.focus(); ta.select(); $("exStatus").textContent = "无法自动复制，文本已选中，请按 Ctrl/⌘+C。"; };
+    ta.focus(); ta.select();
+    $("exStatus").textContent = "正在复制……文本已选中。";
+    var done = false;
+    try { done = document.execCommand("copy"); } catch (e) { done = false; }
+    if (done) { ok(); return; }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        var t = setTimeout(manual, 1500);
+        navigator.clipboard.writeText(ta.value).then(function () { clearTimeout(t); ok(); }, function () { clearTimeout(t); manual(); });
+      } else manual();
+    } catch (e) { manual(); }
+  });
+  $("dlBtn").addEventListener("click", function () {
+    try {
+      var st = state, blob = new Blob(["\ufeff" + $("csv").value], { type: "text/csv;charset=utf-8" }), url = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = url; a.download = "综合电价_" + (st ? st.r.name + "_" + st.W.sTxt.replace(":", "") + "-" + st.W.eTxt.replace(":", "") : "export") + ".csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      $("exStatus").textContent = "已尝试下载；若没有出现文件，说明下载被沙箱拦截，请使用复制。";
+    } catch (e) { $("exStatus").textContent = "下载被拦截，请使用“复制 CSV”。"; }
+  });
+
+  /* ---------- link to the workbench's shared selectors ---------- */
+  var active = false;
+  function applyWb(S0) {
+    if (!S0 || !B.regions[S0.r]) return;
+    var regChanged = regSel.value !== S0.r;
+    regSel.value = S0.r;
+    if (regChanged) fillCombos();
+    var ix = combos.findIndex(function (c) { return S0.ct && c.cat + " · " + c.tt === S0.ct; });
+    if (ix >= 0 && String(ix) !== comboSel.value) { comboSel.value = String(ix); fillVolts(); }
+    if (S0.v && [].some.call(voltSel.options, function (o) { return o.value === S0.v; })) voltSel.value = S0.v;
+    fillDt();
+    if (S0.m && MONTHS.indexOf(S0.m) >= 0) selM = S0.m;
+  }
+  window.__calcSync = function (S0) { applyWb(S0); if (active) render(); };
+  window.__calcActivate = function (on) { active = !!on; if (active) render(); };
+  window.__calcWin = function () { return { from: sIn.value, to: eIn.value }; };
+  window.__calcSetWin = function (a, b) { if (a) sIn.value = a; if (b) eIn.value = b; if (active) render(); };
+  fillCombos();
+  applyWb(window.__wbState && window.__wbState());
+  fillDt();
+})();
+    </script>
+    <script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var cur = "wb";
+  function setHash() {
+    var h = "#wb";
+    if (cur === "calc") {
+      var S = window.__wbState ? window.__wbState() : {}, w = window.__calcWin();
+      h = "#calc?region=" + encodeURIComponent(S.r || "") + "&from=" + encodeURIComponent(w.from) + "&to=" + encodeURIComponent(w.to);
+    }
+    try { history.replaceState(null, "", h); } catch (e) {}
+  }
+  function show(t) {
+    cur = t === "calc" ? "calc" : "wb";
+    $("tabWb").hidden = cur !== "wb"; $("tabCalc").hidden = cur !== "calc";
+    $("tbWb").setAttribute("aria-selected", String(cur === "wb")); $("tbCalc").setAttribute("aria-selected", String(cur === "calc"));
+    window.__calcActivate(cur === "calc");
+    if (cur === "wb" && window.__wbRender) window.__wbRender();
+    setHash();
+  }
+  $("tbWb").onclick = function () { show("wb"); };
+  $("tbCalc").onclick = function () { show("calc"); };
+  document.addEventListener("change", function () { if (cur === "calc") setTimeout(setHash, 0); });
+  document.addEventListener("click", function (e) { if (cur === "calc" && e.target.closest && e.target.closest("[data-w]")) setTimeout(setHash, 0); });
+  if (window.matchMedia && window.matchMedia("(max-width: 599px)").matches) ["process", "volts", "export"].forEach(function (id) { $(id).open = false; });
+  var h = location.hash || "";
+  if (h.indexOf("#calc") === 0) {
+    var q = {}; (h.split("?")[1] || "").split("&").forEach(function (p) { var kv = p.split("="); if (kv[0]) q[kv[0]] = decodeURIComponent(kv[1] || ""); });
+    if (q.region) window.__wbSetRegion(q.region);
+    var ok = function (v) { return /^\d{2}:\d{2}$/.test(v || "") ? v : null; };
+    window.__calcSetWin(ok(q.from), ok(q.to));
+    show("calc");
+  }
 })();
     </script>
   </body>
