@@ -633,8 +633,14 @@
   }
   function renderStrip() {
     var st = state, m = curM(), o = st.ms[MONTHS.indexOf(m)], W = st.W;
-    var rule = (o && o.w.rule) || ruleFor(st.r, m);
-    var dtS = o ? (o.w.dt === "mix" ? "普通日规则（日历加权 " + o.w.note + "）" : dtl(o.w.dt || "normal") + (o.w.note ? "（" + o.w.note + "）" : "")) : "";
+    var rule = (o && o.w.rule) || ruleFor(st.r, m), mainDt = "normal";
+    /* 日历加权：时段条画天数最多的日类型（并列取普通日） */
+    if (o && o.w.dt === "mix" && o.w.wt) {
+      var top = null;
+      o.w.wt.parts.forEach(function (p) { if (!top || p.n > top.n || (p.n === top.n && p.k === "normal")) top = p; });
+      if (top && top.x.rule) { rule = top.x.rule; mainDt = top.k; }
+    }
+    var dtS = o ? (o.w.dt === "mix" ? dtl(mainDt) + "规则（日历加权 " + o.w.note + (mainDt !== "normal" ? "；时段条显示天数最多的" + dtl(mainDt) : "") + "）" : dtl(o.w.dt || "normal") + (o.w.note ? "（" + o.w.note + "）" : "")) : "";
     $("stripSub").textContent = rule ? dtS + " · 分时政策 " + effTxt(rule) + " · 窗口 " + W.desc + "（" + fh(W.len) + " 小时）" : "";
     if (!rule || !segPieces(rule).length) { $("strip").innerHTML = '<p class="fineprint">' + m + " 无分时规则，无法绘制 24 小时分时条。</p>"; return; }
     var P = function (x) { return (x / 1440 * 100).toFixed(3) + "%"; }, pcs = segPieces(rule), seen = {};

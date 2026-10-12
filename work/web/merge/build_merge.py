@@ -57,7 +57,9 @@ wb = wb.replace('    </style>', calc_css + '\n    </style>\n    <link rel="style
 
 # ---------- header tabs + wrap workbench main ----------
 wb = wb.replace('''<label class="x-sel">电压等级<select id="sV"></select></label>
+        <label class="x-sel">日类型<select id="sD"></select></label>
       </header>''', '''<label class="x-sel">电压等级<select id="sV"></select></label>
+        <label class="x-sel" id="sDwrap">日类型<select id="sD"></select></label>
         <nav class="x-tabs" role="tablist" aria-label="视图">
           <button type="button" class="x-tab" role="tab" id="tbWb" aria-controls="tabWb" aria-selected="true">工作台</button>
           <button type="button" class="x-tab" role="tab" id="tbCalc" aria-controls="tabCalc" aria-selected="false">综合电价计算器</button>
@@ -231,6 +233,7 @@ glue = r'''
   function show(t) {
     cur = t === "calc" ? "calc" : "wb";
     $("tabWb").hidden = cur !== "wb"; $("tabCalc").hidden = cur !== "calc";
+    $("sDwrap").hidden = cur === "calc";
     $("tbWb").setAttribute("aria-selected", String(cur === "wb")); $("tbCalc").setAttribute("aria-selected", String(cur === "calc"));
     window.__calcActivate(cur === "calc");
     if (cur === "wb" && window.__wbRender) window.__wbRender();

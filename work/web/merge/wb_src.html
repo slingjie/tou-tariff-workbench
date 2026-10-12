@@ -102,6 +102,7 @@
         <label class="x-sel">月份<select id="sM"></select></label>
         <label class="x-sel">分类·计价<select id="sC"></select></label>
         <label class="x-sel">电压等级<select id="sV"></select></label>
+        <label class="x-sel">日类型<select id="sD"></select></label>
       </header>
       <main class="main">
         <p class="x-notice" id="notice"></p>
@@ -163,11 +164,49 @@
   var mlab = function (m) { return m.slice(2, 4) + "-" + m.slice(5); };
   var hm = function (s) { var h = Math.floor(s / 2); return (h < 10 ? "0" : "") + h + ":" + (s % 2 ? "30" : "00"); };
 
-  function rule(r, m) {
+  /* 特殊日天数（与计算器 SPECIAL 一致；节假日依国办发明电〔2025〕7号） */
+  var WSP = {
+    anhui: { "2025-12": { sharp: 17 }, "2026-01": { sharp: 28, holiday: 3 }, "2026-02": { holiday: 9 }, "2026-04": { holiday: 3 }, "2026-05": { holiday: 5 }, "2026-06": { holiday: 3 }, "2026-07": { sharp: 17 }, "2026-08": { sharp: 31 }, "2026-09": { holiday: 3 }, "2026-10": { holiday: 7 } },
+    shanghai: { "2025-11": { weekend: 10 }, "2026-01": { holiday: 3 }, "2026-02": { holiday: 12 }, "2026-03": { weekend: 9 }, "2026-04": { holiday: 9 }, "2026-05": { holiday: 12 }, "2026-06": { holiday: 9 }, "2026-09": { holiday: 8 }, "2026-10": { holiday: 13 } },
+    zhejiang: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 3 } },
+    jiangxi: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    shanxi: { "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    jiangsu: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } },
+    hubei: { "2026-02": { holiday: 9 }, "2026-05": { holiday: 5 }, "2026-10": { holiday: 7 } }
+  };
+  var DTN = { normal: "普通日", sharp: "尖峰日", high_temp: "高温日", holiday: "节假日", weekend: "休息日" }, DTO = ["normal", "sharp", "high_temp", "holiday", "weekend"];
+  var NEED = { sharp: "sharp", holiday: "deep_valley", weekend: "deep_valley" };
+  var dim = function (m) { return new Date(Date.UTC(+m.slice(0, 4), +m.slice(5, 7), 0)).getUTCDate(); };
+  var dtl = function (k) { return DTN[k] || k; };
+  /* 上海一般工商业单一制为两段制（沪发改价管〔2022〕50号 注2），与计算器一致 */
+  var WSH1 = { day_type: "normal", segments: [["00:00", "06:00", "valley"], ["06:00", "22:00", "peak"], ["22:00", "24:00", "valley"]] };
+  var isSh1 = function () { return S.r === "shanghai" && /单一制/.test(S.ct || ""); };
+  /* 当月各日类型实际天数：特殊日只在该行印出对应价且当月有规则时计入，否则按普通日 */
+  function dayCounts(r, m, row) {
+    var sp = (WSP[r] || {})[m], D = dim(m), out = { normal: D };
+    if (!sp) return null;
+    Object.keys(sp).forEach(function (k) {
+      if (row && row[NEED[k]] != null && rule(r, m, k)) { out[k] = sp[k]; out.normal -= sp[k]; }
+    });
+    return out;
+  }
+  /* 默认日类型 = 当月天数最多的日类型（并列取普通日） */
+  function dtDefault(r, m, row) {
+    var c = m && dayCounts(r, m, row), best = "normal";
+    if (!c) return best;
+    Object.keys(c).forEach(function (k) { if (c[k] > c[best]) best = k; });
+    return best;
+  }
+  function dtList(r, m) {
+    if (!m) return ["normal"];
+    return DTO.concat(uniq((R[r].tou || []).map(function (t) { return t.day_type; })).filter(function (k) { return DTO.indexOf(k) < 0; }))
+      .filter(function (k) { return k === "normal" || rule(r, m, k); });
+  }
+  function rule(r, m, dt) {
     if (!m) return null;
-    var mm = +m.slice(5), d = m + "-01";
+    var mm = +m.slice(5), d = m + "-01", want = dt || "normal";
     return (R[r].tou || []).filter(function (t) {
-      return t.day_type === "normal" && (t.months || []).indexOf(mm) >= 0 && (!t.effective_from || t.effective_from <= d) && (!t.effective_to || t.effective_to >= d);
+      return t.day_type === want && (t.segments || []).length && (t.months || []).indexOf(mm) >= 0 && (!t.effective_from || t.effective_from <= d) && (!t.effective_to || t.effective_to >= d);
     }).sort(function (a, b) { return (a.effective_from || "") < (b.effective_from || "") ? 1 : -1; })[0] || null;
   }
   var toS = function (s) { var p = String(s).split(":"); return Math.round((+p[0] * 60 + +(p[1] || 0)) / 30); };
@@ -190,7 +229,7 @@
     });
   }
 
-  var S = { r: R.zhejiang ? "zhejiang" : Object.keys(R)[0], m: null, ct: null, v: null };
+  var S = { r: R.zhejiang ? "zhejiang" : Object.keys(R)[0], m: null, ct: null, v: null, dt: null, dtUser: false };
   var C = { row: null, rows: [], pr: [], ts: [], ru: null, ok: false };
 
   // region select
@@ -221,15 +260,23 @@
     $("sV").innerHTML = opts(vs.map(function (v) { return [v, v]; }), S.v, "—");
     C.rows = vr;
     C.row = vr.filter(function (o) { return o.voltage === S.v; })[0] || null;
-    C.ru = rule(S.r, S.m);
+    if (S.rm !== S.r + "|" + S.m) { S.dtUser = false; S.rm = S.r + "|" + S.m; }
+    var dl = isSh1() ? ["normal"] : dtList(S.r, S.m), cnt = S.m && !isSh1() ? dayCounts(S.r, S.m, C.row) : null, raw = (WSP[S.r] || {})[S.m] || {};
+    C.dtDef = dtDefault(S.r, S.m, C.row);
+    if (!S.dtUser || dl.indexOf(S.dt) < 0) { S.dt = C.dtDef; S.dtUser = false; }
+    C.cnt = cnt;
+    $("sD").innerHTML = opts(dl.map(function (k) { return [k, dtl(k) + (cnt ? (raw[k] && !cnt[k] ? "（本行未印价，不执行）" : "（" + (cnt[k] || 0) + "/" + dim(S.m) + " 天）") : "") + (k === C.dtDef && dl.length > 1 ? " · 默认" : "")]; }), S.dt, "普通日");
+    $("sD").disabled = dl.length < 2;
+    C.ru = isSh1() && S.m ? WSH1 : rule(S.r, S.m, S.dt);
     C.ts = slots(C.ru);
     C.pr = priced(C.row, C.ts);
     C.ok = !!C.ru && C.ts.some(Boolean);
     C.np = C.ok && !!C.row && !C.pr.some(function (x) { return x.p != null; });
     render();
   }
-  $("sR").onchange = function () { S.r = this.value; sync(); };
-  $("sM").onchange = function () { S.m = this.value; sync(); };
+  $("sR").onchange = function () { S.r = this.value; S.dtUser = false; sync(); };
+  $("sM").onchange = function () { S.m = this.value; S.dtUser = false; sync(); };
+  $("sD").onchange = function () { S.dt = this.value; S.dtUser = this.value !== C.dtDef; sync(); };
   $("sC").onchange = function () { S.ct = this.value; sync(); };
   $("sV").onchange = function () { S.v = this.value; sync(); };
 
@@ -246,7 +293,7 @@
   function renderNow() {
     var t = bj();
     $("clock").textContent = "北京时间 " + t.txt;
-    $("nowSub").textContent = S.m ? "按 " + S.m + " 规则" : "";
+    $("nowSub").textContent = S.m ? "按 " + S.m + " " + dtl(S.dt) + "规则" : "";
     if (!C.ok) { $("now").innerHTML = '<p class="sub">' + (S.m ? "该区域暂无已确认的现行分时规则" : "无月度电价数据") + "</p>"; return; }
     var i = Math.floor(t.s / 1800) % 48, c = C.pr[i], key = function (x) { return x.t + "|" + x.p; }, k = 1;
     while (k < 48 && key(C.pr[(i + k) % 48]) === key(c)) k++;
@@ -401,19 +448,25 @@
     $("leg12").innerHTML = ser.map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") + "<span>断开 = 当月未入库或未单列</span>";
   }
 
+  function calRow(m) {
+    var rs = rowsOf(S.r, m).filter(function (o) { return ctOf(o) === S.ct; });
+    return rs.filter(function (o) { return o.voltage === S.v; })[0] || rs.filter(function (o) { return C.row && o.voltage_rank === C.row.voltage_rank; })[0] || null;
+  }
   function renderCal() {
-    var h = "<span></span>";
+    var h = "<span></span>", anySp = 0;
     for (var k = 0; k < 24; k += 3) h += '<span class="x-h">' + k + "</span>";
     WIN.forEach(function (m) {
-      var ts = slots(rule(S.r, m)), has = (R[S.r].months || []).indexOf(m) >= 0;
-      h += '<span class="x-ml' + (m === S.m ? " is-sel" : "") + '"' + (has ? ' role="button" tabindex="0" data-m="' + m + '" style="cursor:pointer"' : "") + ">" + mlab(m) + "</span>" +
-        ts.map(function (t, i) { return '<span class="x-c" style="--c:' + col(t) + '" title="' + m + " " + hm(i) + "–" + hm(i + 1) + " " + (t ? PN[t] : "无规则") + '"></span>'; }).join("");
+      var dt = m === S.m ? S.dt : dtDefault(S.r, m, calRow(m)), ru = isSh1() ? WSH1 : rule(S.r, m, dt) || rule(S.r, m), ts = slots(ru), has = (R[S.r].months || []).indexOf(m) >= 0;
+      if (ru && ru.day_type !== "normal") dt = ru.day_type; else dt = "normal";
+      if (dt !== "normal") anySp = 1;
+      h += '<span class="x-ml' + (m === S.m ? " is-sel" : "") + '"' + (has ? ' role="button" tabindex="0" data-m="' + m + '" style="cursor:pointer"' : "") + ' title="' + m + " " + dtl(dt) + '规则">' + mlab(m) + (dt !== "normal" ? "*" : "") + "</span>" +
+        ts.map(function (t, i) { return '<span class="x-c" style="--c:' + col(t) + '" title="' + m + " " + dtl(dt) + " " + hm(i) + "–" + hm(i + 1) + " " + (t ? PN[t] : "无规则") + '"></span>'; }).join("");
     });
     $("cal").innerHTML = h;
     [].forEach.call($("cal").querySelectorAll("[data-m]"), function (n) {
       n.onclick = n.onkeydown = function (e) { if (e.type === "keydown" && e.key !== "Enter") return; S.m = n.getAttribute("data-m"); sync(); };
     });
-    $("legcal").innerHTML = P.map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") + "<span>" + sw(null) + "无规则</span>";
+    $("legcal").innerHTML = P.map(function (t) { return "<span>" + sw(t) + PN[t] + "</span>"; }).join("") + "<span>" + sw(null) + "无规则</span>" + (anySp ? "<span>* = 按当月天数最多的特殊日类型（如尖峰日）</span>" : "");
   }
 
   var RS = { k: "spread", d: -1 };
@@ -482,7 +535,7 @@
       (cyc === 2 ? '<div class="row"><dt>第二次循环<small>' + how + "，" + fx(c2) + " 元/kWh</small></dt><dd>" + money(c2 * cap) + " 元</dd></div>" : "") +
       '<div class="row"><dt>每日收益</dt><dd>' + money(daily) + " 元</dd></div>" +
       '<div class="row row--total"><dt>年收益（' + days + " 天）</dt><dd>" + money(yr) + " 元</dd></div></dl>" +
-      '<p class="fineprint">未计容量/需量电费与电池衰减；按所选月份正常工作日规则估算。</p></div>';
+      '<p class="fineprint">未计容量/需量电费与电池衰减；按所选月份' + dtl(S.dt) + '规则估算。</p></div>';
   }
   ["eCap", "eEff", "eCyc", "eDays"].forEach(function (id) { $(id).oninput = renderEss; $(id).onchange = renderEss; });
 
@@ -512,6 +565,9 @@
     if (!S.m) msg.push(GAP[S.r] || "该区域暂无月度代理购电数据");
     else if (!C.ru) msg.push("该区域暂无已确认的现行分时规则，仅显示电价表格。");
     else if (GAP[S.r]) msg.push(GAP[S.r]);
+    if (S.m && isSh1()) msg.push("上海单一制按两段制展示（峰 06–22、谷 22–06，沪发改价管〔2022〕50号 注2）。");
+    else if (S.m && C.ru && S.dt !== "normal") msg.push(R[S.r].name + " " + S.m + " 按" + dtl(S.dt) + "规则展示" + (C.cnt && C.cnt[S.dt] ? "（当月 " + C.cnt[S.dt] + "/" + dim(S.m) + " 天）" : "") + "，可在「日类型」切换。");
+    else if (S.m && C.ru && C.cnt && Object.keys(C.cnt).length > 1) msg.push(R[S.r].name + " " + S.m + " 另有" + Object.keys(C.cnt).filter(function (k) { return k !== "normal"; }).map(function (k) { return dtl(k) + " " + C.cnt[k] + " 天"; }).join("、") + "，可在「日类型」切换查看。");
     $("notice").textContent = msg.join(" ");
     renderNow(); renderKpis(); draw24(); renderComp(); renderEss(); renderVolt(); draw12(); renderCal(); renderRank(); renderCov();
   }
